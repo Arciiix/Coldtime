@@ -1,0 +1,20 @@
+{
+  "name": "coldtime",
+  "version": "1.0.0",
+  "description": "A mock for the Coldtime app",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Artur Nowak",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
