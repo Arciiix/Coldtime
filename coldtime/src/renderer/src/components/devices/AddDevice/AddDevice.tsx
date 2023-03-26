@@ -40,6 +40,7 @@ export default function AddDevice() {
 
     setSubmitting(false);
   };
+  console.log(allDevices);
 
   return (
     <div className="m-2">

@@ -5,10 +5,6 @@ import AddDevice from "./components/devices/AddDevice/AddDevice";
 import Home from "./components/Home/Home";
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
-  },
-  {
     path: "device",
     children: [
       {
@@ -20,6 +16,10 @@ const router = createBrowserRouter([
         element: <DeviceDetails />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <Home />,
   },
 ]);
 export default router;

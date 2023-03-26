@@ -63,7 +63,7 @@ function createWindow(): void {
   ipcMain.handle("BROWSER_GO_BACK", () => {
     mainWindow.webContents.goBack();
   });
-  ipcMain.handle("ADD_DEVICE", async (event, data) => {
+  ipcMain.handle("ADD_DEVICE", async (_, data) => {
     const newDevice = await createDevice(data);
     const allDevices = await getAllDevices();
 
@@ -71,7 +71,7 @@ function createWindow(): void {
     return { newDevice, devices: allDevices };
   });
 
-  ipcMain.handle("GET_DEVICE_DATA", async (event, deviceId) => {
+  ipcMain.handle("GET_DEVICE_DATA", async (_, deviceId) => {
     const device = await prisma.device.findFirst({
       where: {
         id: deviceId,
@@ -91,7 +91,7 @@ function createWindow(): void {
     return { data };
   });
 
-  ipcMain.handle("GET_DEVICE", async (event, id) => {
+  ipcMain.handle("GET_DEVICE", async (_, id) => {
     const device = await getDevice(id);
 
     return { device };

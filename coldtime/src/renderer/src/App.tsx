@@ -4,7 +4,7 @@ import { RecoilRoot } from "recoil";
 import AppBar from "./components/UI/AppBar";
 import router from "./router";
 import theme from "./theme";
-const { ipcRenderer } = window.require("electron");
+// const { ipcRenderer } = window.require("electron");
 
 function App(): JSX.Element {
   return (

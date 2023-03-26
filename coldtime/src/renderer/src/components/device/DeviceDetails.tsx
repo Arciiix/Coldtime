@@ -2,23 +2,13 @@ import { IDevice, IDeviceState } from "@renderer/types/device";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Badge,
-  Divider,
-  Stack,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Badge, Divider } from "@chakra-ui/react";
 
 const { ipcRenderer } = window.require("electron");
 
 export default function DeviceDetails() {
   const { t } = useTranslation();
   const { id } = useParams();
-  const { colorMode } = useColorMode();
 
   const [currentState, setCurrentState] = useState<IDeviceState | null>(null);
   const [deviceData, setDeviceData] = useState<IDevice | null>(null);
