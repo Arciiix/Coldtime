@@ -1,7 +1,7 @@
 import { Button, SkeletonText } from "@chakra-ui/react";
 import networkDiscoveryState from "@renderer/state/network/networkDiscovery";
 import { INetworkDiscoveryDevice } from "@renderer/types/networkDiscoveryDevice";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilState } from "recoil";
 

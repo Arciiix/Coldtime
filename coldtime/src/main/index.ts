@@ -1,12 +1,12 @@
-import { app, shell, BrowserWindow, ipcMain } from "electron";
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
 import { join } from "path";
-import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 
 import { Data, Device, PrismaClient } from "@prisma/client";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
+import { IDeviceStateRequired } from "./deviceState";
 import discoverNetwork from "./networkDiscovery";
-import { IDeviceState, IDeviceStateRequired } from "./deviceState";
 
 const prisma = new PrismaClient();
 
@@ -36,6 +36,7 @@ function createWindow(): void {
       sandbox: false,
       nodeIntegration: true,
       contextIsolation: false,
+      devTools: true, // DEV
     },
   });
 
