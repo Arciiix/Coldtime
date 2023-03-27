@@ -1,22 +1,52 @@
 import { IDevice, IDeviceState } from "@renderer/types/device";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Box, Flex, Heading, Text, Badge, Divider } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Badge,
+  Divider,
+  SkeletonText,
+  Skeleton,
+  SkeletonCircle,
+  useToast,
+  ToastId,
+} from "@chakra-ui/react";
 
 const { ipcRenderer } = window.require("electron");
 
 export default function DeviceDetails() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const toast = useToast();
 
   const [currentState, setCurrentState] = useState<IDeviceState | null>(null);
   const [deviceData, setDeviceData] = useState<IDevice | null>(null);
+  const prevErrorToastIdRef = useRef<ToastId>();
 
   const getDeviceData = async () => {
-    const { data } = await ipcRenderer.invoke("GET_DEVICE_DATA", id);
+    try {
+      const { data } = await ipcRenderer.invoke("GET_DEVICE_DATA", id);
+      setCurrentState(data);
+    } catch (err) {
+      setCurrentState(null);
+      console.error(`Error while getting data: ${err}`);
 
-    setCurrentState(data);
+      if (prevErrorToastIdRef.current) {
+        toast.close(prevErrorToastIdRef.current);
+      }
+
+      prevErrorToastIdRef.current = toast({
+        title: t("error"),
+        description: t("device.errors.gettingData", { error: err?.toString() }),
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   };
 
   const getDeviceInfo = async () => {
@@ -34,7 +64,7 @@ export default function DeviceDetails() {
     };
   }, []);
 
-  if (!currentState || !deviceData) {
+  if (!deviceData) {
     // TODO
     return <h1>loading</h1>;
   }
@@ -53,20 +83,20 @@ export default function DeviceDetails() {
           {deviceData.name}
         </Heading>
         <Badge
-          colorScheme={currentState.isConnected ? "green" : "red"}
+          colorScheme={currentState?.isConnected ? "green" : "red"}
           variant="solid"
           fontSize="md"
           py={2}
           px={3}
           borderRadius="full"
         >
-          {currentState.isConnected
+          {currentState?.isConnected
             ? t("device.status.connected")
             : t("device.status.disconnected")}
         </Badge>
       </Flex>
       <Divider mb={4} borderColor="whiteAlpha.500" />
-      {currentState.data ? (
+      {currentState?.data ? (
         <Flex justify="space-between" align="center" mb={4}>
           <Box>
             <Text fontSize="3xl" fontWeight="bold" mb={2}>
@@ -97,9 +127,25 @@ export default function DeviceDetails() {
           </Box>
         </Flex>
       ) : (
-        <Text color="gray.500" textAlign="center">
-          {t("device.status.noData")}
-        </Text>
+        <Flex justify="space-between" align="center" mb={4}>
+          <Flex direction={"column"} gap={4}>
+            <Skeleton h={10} w={120} />
+            <SkeletonCircle size={"40px"} />
+          </Flex>
+          <Box>
+            <SkeletonText
+              mb={2}
+              w={230}
+              noOfLines={2}
+              fontSize={"32px"}
+              skeletonHeight={4}
+            />
+
+            <Text fontSize="sm" color="gray.500">
+              {`${deviceData.ip}:${deviceData.port}`}
+            </Text>
+          </Box>
+        </Flex>
       )}
     </Box>
   );

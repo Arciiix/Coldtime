@@ -2,6 +2,7 @@ const translations = {
   en: {
     translation: {
       deviceList: "Device list",
+      error: "Error",
       device: {
         goToDevice: "Go to device",
         addNewDevice: "Add new device",
@@ -13,6 +14,9 @@ const translations = {
           off: "off",
           lastUpdated: "Last updated: {{ date }}",
           noData: "No data available",
+        },
+        errors: {
+          gettingData: "Error while getting the data: {{ error }}",
         },
       },
       goBack: "Go back",
@@ -37,6 +41,7 @@ const translations = {
   pl: {
     translation: {
       deviceList: "Lista urządzeń",
+      error: "Błąd",
       device: {
         goToDevice: "Zobacz urządzenie",
         addNewDevice: "Dodaj nowe urządzenie",
@@ -48,6 +53,9 @@ const translations = {
           off: "wył.",
           lastUpdated: "Ostatnia aktualizacja: {{ date }}",
           noData: "Brak danych",
+        },
+        errors: {
+          gettingData: "Błąd podczas pobierania danych: {{ error }}",
         },
       },
       goBack: "Cofnij",
