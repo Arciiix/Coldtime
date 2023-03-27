@@ -16,7 +16,4 @@ model Device {
   port Int    @default(56000)
 
   name String
-
-  user     String @default("admin")
-  password String @default("")
 }

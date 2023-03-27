@@ -106,40 +106,6 @@ export default function AddDevice() {
           )}
         </FormControl>
 
-        <FormControl isInvalid={!!errors.user}>
-          <FormLabel htmlFor="user">{t("addForm.fields.user")}</FormLabel>
-          <Input
-            id="user"
-            type="text"
-            defaultValue={"admin"}
-            {...register("user")}
-            disabled={submitting}
-          />
-          {errors.user && (
-            <FormErrorMessage>
-              <MdErrorOutline /> {t("addForm.errors.user")}
-            </FormErrorMessage>
-          )}
-        </FormControl>
-
-        <FormControl isInvalid={!!errors.password}>
-          <FormLabel htmlFor="password">
-            {t("addForm.fields.password")}
-          </FormLabel>
-          <Input
-            id="password"
-            type="password"
-            // TODO: Add show icon
-            {...register("password")}
-            disabled={submitting}
-          />
-          {errors.password && (
-            <FormErrorMessage>
-              <MdErrorOutline /> {t("addForm.errors.password")}
-            </FormErrorMessage>
-          )}
-        </FormControl>
-
         <Flex mt={4}>
           <Spacer />
           <Button

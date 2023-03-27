@@ -4,7 +4,8 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 
 import { Device, PrismaClient } from "@prisma/client";
-import { fetchDeviceData } from "./deviceAdapter";
+import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
+import discoverNetwork from "./networkDiscovery";
 
 const prisma = new PrismaClient();
 
@@ -83,11 +84,7 @@ function createWindow(): void {
       // TODO
     }
 
-    const data = await fetchDeviceData(
-      device.ip + ":" + device.port,
-      device.user,
-      device.password
-    );
+    const data = await fetchDeviceData(device.ip + ":" + device.port);
     return { data };
   });
 
@@ -95,6 +92,14 @@ function createWindow(): void {
     const device = await getDevice(id);
 
     return { device };
+  });
+
+  ipcMain.handle("NETWORK_DISCOVERY", async () => {
+    return { devices: await discoverNetwork() };
+  });
+
+  ipcMain.handle("GET_DEVICE_DATA_BY_IP", (_, ip) => {
+    return fetchDeviceDataByIpOnly(ip);
   });
 }
 

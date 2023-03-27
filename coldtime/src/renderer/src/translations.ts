@@ -3,6 +3,11 @@ const translations = {
     translation: {
       deviceList: "Device list",
       error: "Error",
+      networkDiscovery: {
+        title: "Or try to discover the device automatically",
+        found: "Number of devices found: {{ count }}",
+        compatible: "Compatible devices: {{ count }}",
+      },
       device: {
         goToDevice: "Go to device",
         addNewDevice: "Add new device",
@@ -42,6 +47,11 @@ const translations = {
     translation: {
       deviceList: "Lista urządzeń",
       error: "Błąd",
+      networkDiscovery: {
+        title: "Lub spróbuj automatycznie wykryć urządzenie",
+        found: "Ilość znalezionych urządzeń: {{ count }}",
+        compatible: "Ilość kompatybilnych urządzeń: {{ count }}",
+      },
       device: {
         goToDevice: "Zobacz urządzenie",
         addNewDevice: "Dodaj nowe urządzenie",
