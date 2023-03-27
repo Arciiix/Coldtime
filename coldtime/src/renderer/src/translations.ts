@@ -3,6 +3,7 @@ const translations = {
     translation: {
       deviceList: "Device list",
       error: "Error",
+      refresh: "Refresh",
       networkDiscovery: {
         title: "Or try to discover the device automatically",
         found: "Number of devices found: {{ count }}",
@@ -11,7 +12,9 @@ const translations = {
       device: {
         goToDevice: "Go to device",
         addNewDevice: "Add new device",
+        date: "date",
         temperature: "temperature",
+        isRunning: "status",
         status: {
           connected: "ONLINE",
           disconnected: "OFFILNE",
@@ -47,6 +50,7 @@ const translations = {
     translation: {
       deviceList: "Lista urządzeń",
       error: "Błąd",
+      refresh: "Odśwież",
       networkDiscovery: {
         title: "Lub spróbuj automatycznie wykryć urządzenie",
         found: "Ilość znalezionych urządzeń: {{ count }}",
@@ -55,7 +59,9 @@ const translations = {
       device: {
         goToDevice: "Zobacz urządzenie",
         addNewDevice: "Dodaj nowe urządzenie",
+        date: "data",
         temperature: "temperatura",
+        isRunning: "status",
         status: {
           connected: "ONLINE",
           disconnected: "OFFLINE",

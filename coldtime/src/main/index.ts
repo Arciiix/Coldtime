@@ -3,9 +3,10 @@ import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 
-import { Device, PrismaClient } from "@prisma/client";
+import { Data, Device, PrismaClient } from "@prisma/client";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
 import discoverNetwork from "./networkDiscovery";
+import { IDeviceState, IDeviceStateRequired } from "./deviceState";
 
 const prisma = new PrismaClient();
 
@@ -84,7 +85,10 @@ function createWindow(): void {
       // TODO
     }
 
-    const data = await fetchDeviceData(device.ip + ":" + device.port);
+    const data = await fetchDeviceData(
+      device.ip + ":" + device.port,
+      device.id
+    );
     return { data };
   });
 
@@ -101,6 +105,28 @@ function createWindow(): void {
   ipcMain.handle("GET_DEVICE_DATA_BY_IP", (_, ip) => {
     return fetchDeviceDataByIpOnly(ip);
   });
+
+  // TODO DEV
+  ipcMain.handle(
+    "GET_HISTORICAL_DATA",
+    async (_, deviceId): Promise<IDeviceStateRequired[]> => {
+      const data = await prisma.data.findMany({
+        where: { deviceId },
+        orderBy: {
+          date: "desc",
+        },
+      });
+
+      return data.map((e) => ({
+        isConnected: e.isConnected,
+        date: e.date,
+        data: {
+          isRunning: e.isRunning,
+          temperature: e.temperature,
+        },
+      }));
+    }
+  );
 }
 
 // This method will be called when Electron has finished
@@ -140,3 +166,22 @@ app.on("window-all-closed", async () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+export async function saveData(
+  state: IDeviceStateRequired,
+  deviceId: string
+): Promise<Data> {
+  const data = await prisma.data.create({
+    data: {
+      deviceId: deviceId,
+      isConnected: state.isConnected,
+      date: new Date(),
+
+      isRunning: state.data.isRunning,
+      temperature: state.data.temperature,
+    },
+  });
+
+  console.log("Created new entry");
+  return data;
+}

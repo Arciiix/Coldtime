@@ -7,3 +7,6 @@ export interface IDeviceState {
     isRunning: boolean;
   };
 }
+export type IDeviceStateRequired = {
+  [P in keyof IDeviceState]-?: IDeviceState[P];
+};

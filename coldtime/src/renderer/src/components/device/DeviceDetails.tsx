@@ -15,6 +15,7 @@ import {
   useToast,
   ToastId,
 } from "@chakra-ui/react";
+import HistoricalDataTable from "./HistoricalDataTable";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -26,6 +27,9 @@ export default function DeviceDetails() {
   const [currentState, setCurrentState] = useState<IDeviceState | null>(null);
   const [deviceData, setDeviceData] = useState<IDevice | null>(null);
   const prevErrorToastIdRef = useRef<ToastId>();
+
+  const [historicalData, setHistoricalData] = useState<IDeviceState[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const getDeviceData = async () => {
     try {
@@ -54,10 +58,18 @@ export default function DeviceDetails() {
     setDeviceData(device);
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    const data = await ipcRenderer.invoke("GET_HISTORICAL_DATA", id);
+    setHistoricalData(data satisfies IDeviceState[]);
+    setIsRefreshing(false);
+  };
+
   useEffect(() => {
     const interval = setInterval(getDeviceData, 5000);
     getDeviceInfo();
     getDeviceData();
+    handleRefresh();
 
     return () => {
       clearInterval(interval);
@@ -147,6 +159,12 @@ export default function DeviceDetails() {
           </Box>
         </Flex>
       )}
+
+      <HistoricalDataTable
+        historyData={historicalData}
+        handleRefresh={handleRefresh}
+        isRefreshing={isRefreshing}
+      />
     </Box>
   );
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
-import { IDeviceState } from "./deviceState";
+import { saveData } from ".";
+import { IDeviceState, IDeviceStateRequired } from "./deviceState";
 
 export interface IDataFormat {
   IS_RUNNING: boolean;
@@ -10,7 +11,8 @@ export interface IDataFormat {
 }
 
 export async function fetchDeviceData(
-  ipWithPort: string
+  ipWithPort: string,
+  deviceId: string
 ): Promise<IDeviceState> {
   try {
     const request = await axios.get(
@@ -22,7 +24,8 @@ export async function fetchDeviceData(
       }
     );
     const data: IDataFormat = request.data;
-    return {
+
+    const dataParsed: IDeviceStateRequired = {
       isConnected: true,
       date: new Date(),
 
@@ -31,6 +34,10 @@ export async function fetchDeviceData(
         isRunning: data.IS_RUNNING,
       },
     };
+
+    saveData(dataParsed, deviceId);
+
+    return dataParsed;
   } catch (err) {
     // TODO
     console.error(err);
