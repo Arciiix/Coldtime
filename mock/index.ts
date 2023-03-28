@@ -8,7 +8,7 @@ app.get("", (req: Request, res: Response) => {
   res.send("Hello world - the mock works!");
 });
 
-app.get("/v1/school/status", (req: Request, res: Response) => {
+app.get("/api/v1/school/status", (req: Request, res: Response) => {
   console.log(`Got the data at ${new Date().toISOString()}`);
   // TODO: Make it dynamic
   res.send({

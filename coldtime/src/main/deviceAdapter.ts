@@ -16,7 +16,7 @@ export async function fetchDeviceData(
 ): Promise<IDeviceState> {
   try {
     const request = await axios.get(
-      "http://" + ipWithPort + "/v1/school/status",
+      "http://" + ipWithPort + "/api/v1/school/status",
       {
         headers: {
           "Content-Type": "application/json",
