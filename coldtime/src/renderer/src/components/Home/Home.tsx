@@ -1,4 +1,4 @@
-import { Divider } from "@chakra-ui/react";
+import { Divider, Text } from "@chakra-ui/react";
 import getSettings from "@renderer/fetch/settings/getSettings";
 import deviceListState from "@renderer/state/devices/deviceList";
 import settingsState from "@renderer/state/settings/settings";
@@ -22,7 +22,9 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchDevices = async () => {
-    const { devices } = await ipcRenderer.invoke("GET_DEVICES");
+    const { devices } = await ipcRenderer.invoke("GET_DEVICES", {
+      withState: true,
+    });
     setDeviceList((devices || []) satisfies IDevice[]);
 
     setIsLoading(false);
@@ -46,7 +48,9 @@ export default function Home() {
   if (isLoading) return <h1>loading</h1>; /* TODO */
   return (
     <div className="flex flex-col m-2 select-none gap-4">
-      <span className="text-3xl">{t("deviceList")}</span>
+      <Text fontSize="4xl" fontWeight="bold" mb="4">
+        {t("deviceList")}
+      </Text>
       <DeviceList devices={deviceList} />
       <Divider />
       <NetworkDiscovery />

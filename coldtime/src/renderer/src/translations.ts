@@ -16,6 +16,7 @@ const translations = {
         temperature: "temperature",
         isRunning: "status",
         status: {
+          dataFrom: "Data from: {{ date }}",
           connected: "ONLINE",
           disconnected: "OFFILNE",
           on: "on",
@@ -63,6 +64,7 @@ const translations = {
         temperature: "temperatura",
         isRunning: "status",
         status: {
+          dataFrom: "Dane z: {{ date }}",
           connected: "ONLINE",
           disconnected: "OFFLINE",
           on: "wł.",

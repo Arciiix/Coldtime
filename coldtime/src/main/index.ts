@@ -5,7 +5,7 @@ import icon from "../../resources/icon.png?asset";
 
 import { Data, Device, PrismaClient } from "@prisma/client";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
-import { IDeviceStateRequired } from "./deviceState";
+import getLastState, { IDeviceStateRequired } from "./deviceState";
 import discoverNetwork from "./networkDiscovery";
 import {
   getSettings,
@@ -13,13 +13,28 @@ import {
   IUpdateSettings,
   updateSettings,
 } from "./settings";
+import { IDevice } from "./device";
 
 export const prisma = new PrismaClient();
 
 let settings: ISettingsDetails;
 
-async function getAllDevices(): Promise<Device[]> {
-  return await prisma.device.findMany({});
+async function getAllDevices(withState?: boolean): Promise<IDevice[]> {
+  const devices = await prisma.device.findMany({});
+
+  const parsed: IDevice[] = [];
+
+  for await (const device of devices) {
+    parsed.push({
+      id: device.id,
+      ip: device.ip,
+      name: device.name,
+      port: device.port,
+      lastState: withState ? await getLastState(device.id) : null,
+    });
+  }
+
+  return parsed;
 }
 async function createDevice(data): Promise<Device> {
   return await prisma.device.create({ data });
@@ -69,9 +84,9 @@ async function createWindow(): Promise<void> {
   settings = await getSettings();
   console.log(`Fetched settings: ${JSON.stringify(settings)}`);
 
-  ipcMain.handle("GET_DEVICES", async (event) => {
+  ipcMain.handle("GET_DEVICES", async (_, { withState }) => {
     // console.log(event);
-    const result = await getAllDevices();
+    const result = await getAllDevices(withState ?? false);
     return { devices: result };
   });
 
