@@ -51,7 +51,7 @@ export async function fetchDeviceDataByIpOnly(
   console.log("Trying to get device data by ip only", ip);
   try {
     const request = await axios.get(
-      "http://" + ip + ":56000" + "/v1/school/status",
+      "http://" + ip + ":56000" + "/api/v1/school/status",
       {
         headers: {
           "Content-Type": "application/json",
