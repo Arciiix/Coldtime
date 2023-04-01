@@ -1,17 +1,8 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  IconButton,
-  Image,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
 import updateSettings from "@renderer/fetch/settings/updateSettings";
 import settingsState from "@renderer/state/settings/settings";
 import { Language } from "@renderer/types/settings";
 import { useEffect, useState } from "react";
-import { MdNightlight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 
