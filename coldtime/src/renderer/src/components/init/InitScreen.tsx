@@ -71,8 +71,8 @@ const WelcomePage = () => {
       bgGradient={"linear(to-b, blue.700, purple.700)"}
     >
       <Box
-        w={{ base: "50px", sm: "150px", md: "200px" }}
-        h={{ base: "50px", sm: "150px", md: "200px" }}
+        w={{ base: "150px", md: "200px" }}
+        h={{ base: "150px", md: "200px" }}
         mb={8}
         borderRadius="full"
         bg="white"
@@ -82,8 +82,8 @@ const WelcomePage = () => {
           src="/src/assets/logo.png"
           alt="Coldtime logo"
           borderRadius="full"
-          w={{ base: "50px", sm: "150px", md: "200px" }}
-          h={{ base: "50px", sm: "150px", md: "200px" }}
+          w={{ base: "150px", md: "200px" }}
+          h={{ base: "150px", md: "200px" }}
         />
       </Box>
 
@@ -92,10 +92,11 @@ const WelcomePage = () => {
         fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
         fontWeight="bold"
         color="white"
+        textAlign={"center"}
       >
         {text}
       </Heading>
-      <Flex mb={8}>
+      <Flex mb={8} px={2} direction={{ base: "column", sm: "row" }} gap={2}>
         <Button
           disabled={isLoading}
           onClick={() => handleLanguageClick("pl")}
