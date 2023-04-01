@@ -1,14 +1,21 @@
 import { Divider } from "@chakra-ui/react";
+import getSettings from "@renderer/fetch/settings/getSettings";
 import deviceListState from "@renderer/state/devices/deviceList";
+import settingsState from "@renderer/state/settings/settings";
 import { IDevice } from "@renderer/types/device";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import DeviceList from "../devices/DeviceList/DeviceList";
 import NetworkDiscovery from "../NetworkDiscovery/NetworkDiscovery";
 const { ipcRenderer } = window.require("electron");
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const [settings, setSettings] = useRecoilState(settingsState);
+
   const { t } = useTranslation();
   const [deviceList, setDeviceList] = useRecoilState(deviceListState);
 
@@ -21,8 +28,19 @@ export default function Home() {
     setIsLoading(false);
   };
 
+  const fetchOnInit = async () => {
+    const settings = await getSettings();
+    setSettings(settings);
+    if (settings.language.isDefault) {
+      // Ran the app for the first time; navigate to init
+      navigate("/init");
+    }
+  };
+
   useEffect(() => {
-    fetchDevices();
+    fetchOnInit().then((e) => {
+      fetchDevices();
+    });
   }, []);
 
   if (isLoading) return <h1>loading</h1>; /* TODO */

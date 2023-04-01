@@ -11,7 +11,7 @@ function App(): JSX.Element {
     <RecoilRoot>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <AppBar />
+        {/* <AppBar /> */}
         <RouterProvider router={router} />
       </ChakraProvider>
     </RecoilRoot>

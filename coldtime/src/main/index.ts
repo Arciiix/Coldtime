@@ -7,8 +7,16 @@ import { Data, Device, PrismaClient } from "@prisma/client";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
 import { IDeviceStateRequired } from "./deviceState";
 import discoverNetwork from "./networkDiscovery";
+import {
+  getSettings,
+  ISettingsDetails,
+  IUpdateSettings,
+  updateSettings,
+} from "./settings";
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
+
+let settings: ISettingsDetails;
 
 async function getAllDevices(): Promise<Device[]> {
   return await prisma.device.findMany({});
@@ -20,7 +28,7 @@ async function getDevice(id: string): Promise<Device | null> {
   return await prisma.device.findFirst({ where: { id } });
 }
 
-function createWindow(): void {
+async function createWindow(): Promise<void> {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -57,8 +65,12 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
+  // Try to fetch the settings
+  settings = await getSettings();
+  console.log(`Fetched settings: ${JSON.stringify(settings)}`);
+
   ipcMain.handle("GET_DEVICES", async (event) => {
-    console.log(event);
+    // console.log(event);
     const result = await getAllDevices();
     return { devices: result };
   });
@@ -128,6 +140,16 @@ function createWindow(): void {
       }));
     }
   );
+
+  ipcMain.handle("GET_SETTINGS", (_) => {
+    return settings;
+  });
+
+  ipcMain.handle("UPDATE_SETTINGS", async (_, newSettings: IUpdateSettings) => {
+    settings = await updateSettings(newSettings);
+
+    return settings;
+  });
 }
 
 // This method will be called when Electron has finished

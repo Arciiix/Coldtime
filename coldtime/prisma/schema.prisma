@@ -31,3 +31,8 @@ model Data {
   temperature Float
   isRunning   Boolean
 }
+
+model Settings {
+  key   String @id
+  value String
+}
