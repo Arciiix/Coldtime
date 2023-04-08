@@ -21,7 +21,7 @@ const { ipcRenderer } = window.require("electron");
 
 export default function DeviceDetails() {
   const { t } = useTranslation();
-  const { id } = useParams();
+  const { deviceId: id } = useParams();
   const toast = useToast();
 
   const [currentState, setCurrentState] = useState<IDeviceState | null>(null);
@@ -66,6 +66,9 @@ export default function DeviceDetails() {
   };
 
   useEffect(() => {
+    setCurrentState(null);
+    setDeviceData(null);
+
     const interval = setInterval(getDeviceData, 5000);
     getDeviceInfo();
     getDeviceData();
@@ -74,7 +77,7 @@ export default function DeviceDetails() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [id]);
 
   if (!deviceData) {
     // TODO
