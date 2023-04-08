@@ -1,4 +1,4 @@
-import { Divider, Text } from "@chakra-ui/react";
+import { Box, Divider, Text } from "@chakra-ui/react";
 import getSettings from "@renderer/fetch/settings/getSettings";
 import deviceListState from "@renderer/state/devices/deviceList";
 import settingsState from "@renderer/state/settings/settings";
@@ -48,11 +48,17 @@ export default function Home() {
 
   if (isLoading) return <h1>loading</h1>; /* TODO */
   return (
-    <div className="flex flex-col m-2 select-none gap-4">
+    <Box
+      display="flex"
+      flexDirection="column"
+      m={2}
+      userSelect="none"
+      gridGap={4}
+    >
       <Text fontSize="4xl" fontWeight="bold" mb="4">
         {t("deviceList")}
       </Text>
       <DeviceList devices={deviceList} />
-    </div>
+    </Box>
   );
 }
