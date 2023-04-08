@@ -2,7 +2,7 @@ import { Box, Tooltip } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { MdAdd } from "react-icons/md";
 
-export default function AddDevice() {
+export default function AddDeviceButton() {
   const { t } = useTranslation();
 
   return (

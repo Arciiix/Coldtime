@@ -1,6 +1,6 @@
 import { Box, Divider, Image } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import AddDevice from "./Device/AddDevice";
+import AddDeviceButton from "./Device/AddDeviceButton";
 import DrawerDeviceList from "./Device/DrawerDeviceList";
 
 export default function Drawer() {
@@ -67,7 +67,7 @@ export default function Drawer() {
         <Divider my={4} />
         <DrawerDeviceList />
         <Divider my={4} />
-        <AddDevice />
+        <AddDeviceButton />
       </Box>
     </div>
   );
