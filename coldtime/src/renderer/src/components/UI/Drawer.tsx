@@ -5,7 +5,6 @@ import {
   Box,
   Divider,
   Image,
-  Text,
   Tooltip,
 } from "@chakra-ui/react";
 import deviceListState from "@renderer/state/devices/deviceList";
@@ -120,7 +119,7 @@ export default function Drawer() {
     );
   }, [devices, deviceId]);
   return (
-    <div className="h-screen top-0 w-16 py-3 pl-1">
+    <div className="h-screen fixed top-0 w-[72px] py-3 pl-1">
       <Box
         bg="gray.700"
         backdropFilter="blur(20px) saturate(150%)"
@@ -132,6 +131,30 @@ export default function Drawer() {
         overflow="hidden"
         h="full"
         w="full"
+        overflowY="auto"
+        display="flex"
+        flexDir="column"
+        alignItems="center"
+        sx={{
+          "&::-webkit-scrollbar": {
+            width: "4px",
+            height: "4px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "gray.400",
+            borderRadius: "full",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "gray.500",
+          },
+          "scrollbar-width": "thin",
+          "-ms-overflow-style": "none",
+          "scrollbar-color": "gray.400 transparent",
+          WebkitOverflowScrolling: "touch",
+        }}
       >
         <Box
           bg="whiteAlpha.200"
