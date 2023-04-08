@@ -16,3 +16,5 @@ export interface IDeviceState {
     isRunning: boolean;
   };
 }
+
+export const DEFAULT_PORT = 56000;

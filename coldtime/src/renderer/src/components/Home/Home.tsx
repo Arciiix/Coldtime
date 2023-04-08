@@ -53,8 +53,6 @@ export default function Home() {
         {t("deviceList")}
       </Text>
       <DeviceList devices={deviceList} />
-      <Divider />
-      <NetworkDiscovery />
     </div>
   );
 }

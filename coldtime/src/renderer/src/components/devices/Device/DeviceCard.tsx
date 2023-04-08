@@ -7,7 +7,12 @@ import { FaWifi } from "react-icons/fa";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-const DeviceCard = ({ device }: { device: IDevice }) => {
+interface IDeviceProps {
+  device: IDevice;
+  overrideLink?: string | null;
+}
+
+const DeviceCard = ({ device, overrideLink }: IDeviceProps) => {
   const { t } = useTranslation();
   const { id, name, ip, port, lastState } = device;
 
@@ -25,7 +30,7 @@ const DeviceCard = ({ device }: { device: IDevice }) => {
   return (
     <Box
       as={Link}
-      to={`/device/${id}`}
+      to={overrideLink ?? `/device/${id}`}
       bg="transparent"
       boxShadow={
         isOnline

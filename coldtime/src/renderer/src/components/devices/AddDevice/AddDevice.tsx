@@ -9,6 +9,7 @@ import {
   Button,
   Flex,
   Spacer,
+  Text,
 } from "@chakra-ui/react";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { MdErrorOutline } from "react-icons/md";
@@ -17,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import deviceListState from "@renderer/state/devices/deviceList";
 const { ipcRenderer } = window.require("electron");
 import { useRecoilState } from "recoil";
+import NetworkDiscovery from "@renderer/components/NetworkDiscovery/NetworkDiscovery";
+import { DEFAULT_PORT } from "@renderer/types/device";
 
 export default function AddDevice() {
   const { t } = useTranslation();
@@ -43,8 +46,21 @@ export default function AddDevice() {
   console.log(allDevices);
 
   return (
-    <div className="m-2">
-      <span className="text-2xl">{t("device.addNewDevice")}</span>
+    <div className="m-2 flex flex-col">
+      <Text fontSize="4xl">{t("device.addNewDevice.title")}</Text>
+      <Text fontSize="2xl" color="blue.300">
+        {t("device.addNewDevice.auto")}
+      </Text>
+      <Text fontSize="sm" color="blue.200">
+        {t("device.addNewDevice.autoDesc")}
+      </Text>
+      <NetworkDiscovery />
+      <Text fontSize="2xl" color="yellow.300">
+        {t("device.addNewDevice.orManual")}
+      </Text>
+      <Text fontSize="sm" color="yellow.200">
+        {t("device.addNewDevice.manualDesc")}
+      </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.name}>
           <FormLabel htmlFor="name">{t("addForm.fields.name")}</FormLabel>
@@ -87,7 +103,7 @@ export default function AddDevice() {
           <Input
             id="port"
             type="number"
-            defaultValue={56000}
+            defaultValue={DEFAULT_PORT}
             {...register("port", {
               valueAsNumber: true,
               required: true,

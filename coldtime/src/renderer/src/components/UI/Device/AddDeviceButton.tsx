@@ -1,6 +1,7 @@
 import { Box, Tooltip } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { MdAdd } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function AddDeviceButton() {
   const { t } = useTranslation();
@@ -8,6 +9,8 @@ export default function AddDeviceButton() {
   return (
     <Tooltip label={t("drawer.addDevice")}>
       <Box
+        as={Link}
+        to="/device/add"
         display="flex"
         alignItems="center"
         justifyContent="center"

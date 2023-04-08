@@ -1,20 +1,34 @@
 const translations = {
   en: {
     translation: {
+      loading: "Loading...",
       deviceList: "Device list",
       error: "Error",
       refresh: "Refresh",
-      networkDiscovery: {
-        title: "Or try to discover the device automatically",
-        found: "Number of devices found: {{ count }}",
-        compatible: "Compatible devices: {{ count }}",
-      },
+      cancel: "Cancel",
+      save: "Save",
       drawer: {
         addDevice: "Add device",
       },
       device: {
         goToDevice: "Go to device",
-        addNewDevice: "Add new device",
+        addNewDevice: {
+          title: "Add new device",
+          auto: "Automatically",
+          autoDesc: "Let the app automatically find your device in the network",
+          orManual: "Or manually",
+          manualDesc: "Provide all of the details by yourself",
+          networkDiscovery: {
+            found: "Number of devices found in the network",
+            compatible: "Compatible devices",
+            excludingAdded: "excluding already added",
+            nameForm: {
+              title: "Add new device",
+              description:
+                "You're about to add a new device with ip: {{ ip }}. Please come up with a friendly name.",
+            },
+          },
+        },
         date: "date",
         temperature: "temperature",
         isRunning: "status",
@@ -52,20 +66,36 @@ const translations = {
   },
   pl: {
     translation: {
+      loading: "Ładowanie...",
       deviceList: "Lista urządzeń",
       error: "Błąd",
       refresh: "Odśwież",
-      networkDiscovery: {
-        title: "Lub spróbuj automatycznie wykryć urządzenie",
-        found: "Ilość znalezionych urządzeń: {{ count }}",
-        compatible: "Ilość kompatybilnych urządzeń: {{ count }}",
-      },
+      cancel: "Anuluj",
+      save: "Zapisz",
       drawer: {
         addDevice: "Dodaj urządzenie",
       },
       device: {
         goToDevice: "Zobacz urządzenie",
-        addNewDevice: "Dodaj nowe urządzenie",
+        addNewDevice: {
+          title: "Dodaj nowe urządzenie",
+          auto: "Automatycznie",
+          autoDesc:
+            "Pozwól aplikacji automatycznie znaleźć Twoje urządzenie w sieci",
+          orManual: "Lub ręcznie",
+          manualDesc: "Podaj wszystkie dane manualnie",
+          networkDiscovery: {
+            title: "Lub spróbuj automatycznie wykryć urządzenie",
+            found: "Ilość znalezionych urządzeń w sieci",
+            compatible: "Ilość kompatybilnych urządzeń",
+            excludingAdded: "pomijając już dodane",
+            nameForm: {
+              title: "Dodaj nowe urządzenie",
+              description:
+                "Dodajesz nowe urządzenie z ip: {{ ip }}. Nadaj mu nazwę.",
+            },
+          },
+        },
         date: "data",
         temperature: "temperatura",
         isRunning: "status",
