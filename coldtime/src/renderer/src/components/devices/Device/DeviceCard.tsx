@@ -27,7 +27,11 @@ const DeviceCard = ({ device }: { device: IDevice }) => {
       as={Link}
       to={`/device/${id}`}
       bg="transparent"
-      boxShadow="0 8px 32px 0 rgba(31, 38, 135, 0.37)"
+      boxShadow={
+        isOnline
+          ? "0 8px 32px 0 rgba(31, 38, 135, 0.37)"
+          : "0 12px 24px 0 rgba(47, 48, 18, 0.37)"
+      }
       backdropFilter="blur(16.0px)"
       borderRadius="10px"
       border="1px solid rgba(255, 255, 255, 0.18)"
@@ -42,7 +46,9 @@ const DeviceCard = ({ device }: { device: IDevice }) => {
       transition=".3s"
       _hover={{
         transform: "translateY(-10px)",
-        boxShadow: "0 12px 24px 0 rgba(31, 38, 135, 0.3)",
+        boxShadow: isOnline
+          ? "0 12px 24px 0 rgba(31, 38, 135, 0.5)"
+          : "0 12px 24px 0 rgba(92, 94, 21, 0.5)",
       }}
     >
       <Box
@@ -54,7 +60,7 @@ const DeviceCard = ({ device }: { device: IDevice }) => {
         bgGradient={
           isOnline
             ? "linear(to-b, #64dfdf, #8eb9f6)"
-            : "linear-gradient(135deg, rgba(153, 15, 118, 0.5), rgba(107, 86, 2, 0.5))"
+            : "linear(135deg, rgba(153, 15, 118, 0.5), rgba(107, 86, 2, 0.5))"
         }
         opacity="0.5"
         zIndex="-1"

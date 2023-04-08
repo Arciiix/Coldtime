@@ -21,8 +21,8 @@ export default function DeviceList(props: IDeviceListProps) {
 
   return (
     <SimpleGrid
-      spacing={"40px"}
-      templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+      spacing={"30px"}
+      templateColumns="repeat(auto-fill, minmax(275px, 1fr))"
     >
       {...devices}
       {/* <NewDevice /> */}

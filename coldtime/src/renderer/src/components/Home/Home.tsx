@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import DeviceList from "../devices/DeviceList/DeviceList";
 import NetworkDiscovery from "../NetworkDiscovery/NetworkDiscovery";
+
 const { ipcRenderer } = window.require("electron");
 
 export default function Home() {
