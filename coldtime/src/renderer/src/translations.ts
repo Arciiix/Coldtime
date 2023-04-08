@@ -9,6 +9,9 @@ const translations = {
         found: "Number of devices found: {{ count }}",
         compatible: "Compatible devices: {{ count }}",
       },
+      drawer: {
+        addDevice: "Add device",
+      },
       device: {
         goToDevice: "Go to device",
         addNewDevice: "Add new device",
@@ -56,6 +59,9 @@ const translations = {
         title: "Lub spróbuj automatycznie wykryć urządzenie",
         found: "Ilość znalezionych urządzeń: {{ count }}",
         compatible: "Ilość kompatybilnych urządzeń: {{ count }}",
+      },
+      drawer: {
+        addDevice: "Dodaj urządzenie",
       },
       device: {
         goToDevice: "Zobacz urządzenie",

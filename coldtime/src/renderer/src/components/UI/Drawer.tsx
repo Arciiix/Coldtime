@@ -4,17 +4,21 @@ import {
   Badge,
   Box,
   Divider,
+  IconButton,
   Image,
   Tooltip,
 } from "@chakra-ui/react";
 import deviceListState from "@renderer/state/devices/deviceList";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { MdAdd } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 export default function Drawer() {
   const { deviceId } = useParams();
+  const { t } = useTranslation();
   const devices = useRecoilValue(deviceListState);
 
   const renderDevices = useMemo(() => {
@@ -180,6 +184,28 @@ export default function Drawer() {
         </span>
         <Divider my={4} />
         {renderDevices}
+        <Divider my={4} />
+
+        <Tooltip label={t("drawer.addDevice")}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            w="50px"
+            h="50px"
+            borderRadius="50%"
+            bgGradient="linear(to-tr, teal.300, blue.400)"
+            bgSize="300% 100%"
+            boxShadow="20px 20px 50px rgba(0, 0, 0, 0.2), -20px -20px 50px rgba(255, 255, 255, 0.2)"
+            transition="all 0.3s ease-out"
+            _hover={{
+              backgroundPosition: "100% 0%",
+              cursor: "pointer",
+            }}
+          >
+            <MdAdd size={24} color="#fff" />
+          </Box>
+        </Tooltip>
       </Box>
     </div>
   );
