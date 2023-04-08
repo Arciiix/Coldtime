@@ -1,7 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import { IDevice } from "@renderer/types/device";
 import { formatDateToTimestamp } from "@renderer/utils/formatDate";
-import { useMemo } from "react";
+import { MouseEventHandler, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FaWifi } from "react-icons/fa";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
@@ -10,9 +10,10 @@ import { Link } from "react-router-dom";
 interface IDeviceProps {
   device: IDevice;
   overrideLink?: string | null;
+  onContextMenu?: MouseEventHandler;
 }
 
-const DeviceCard = ({ device, overrideLink }: IDeviceProps) => {
+const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
   const { t } = useTranslation();
   const { id, name, ip, port, lastState } = device;
 
@@ -29,6 +30,7 @@ const DeviceCard = ({ device, overrideLink }: IDeviceProps) => {
 
   return (
     <Box
+      onContextMenu={onContextMenu}
       as={Link}
       to={overrideLink ?? `/device/${id}`}
       bg="transparent"

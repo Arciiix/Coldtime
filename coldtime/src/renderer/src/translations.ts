@@ -6,6 +6,7 @@ const translations = {
       error: "Error",
       refresh: "Refresh",
       cancel: "Cancel",
+      confirm: "Confirm",
       save: "Save",
       drawer: {
         addDevice: "Add device",
@@ -28,6 +29,14 @@ const translations = {
                 "You're about to add a new device with ip: {{ ip }}. Please come up with a friendly name.",
             },
           },
+        },
+        deleteDevice: {
+          title: "Delete device",
+          description: "Are you sure you want to delete this device?",
+        },
+        contextMenu: {
+          edit: "Edit",
+          delete: "Delete",
         },
         date: "date",
         temperature: "temperature",
@@ -71,6 +80,7 @@ const translations = {
       error: "Błąd",
       refresh: "Odśwież",
       cancel: "Anuluj",
+      confirm: "Potwierdź",
       save: "Zapisz",
       drawer: {
         addDevice: "Dodaj urządzenie",
@@ -95,6 +105,14 @@ const translations = {
                 "Dodajesz nowe urządzenie z ip: {{ ip }}. Nadaj mu nazwę.",
             },
           },
+        },
+        deleteDevice: {
+          title: "Usuń urządzenie",
+          description: "Czy na pewno chcesz usunąć to urządzenie?",
+        },
+        contextMenu: {
+          edit: "Edytuj",
+          delete: "Usuń",
         },
         date: "data",
         temperature: "temperatura",

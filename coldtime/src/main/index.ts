@@ -39,6 +39,17 @@ async function getAllDevices(withState?: boolean): Promise<IDevice[]> {
 async function createDevice(data): Promise<Device> {
   return await prisma.device.create({ data });
 }
+async function deleteDevice(id: string) {
+  await prisma.$transaction([
+    prisma.device.delete({ where: { id: id } }),
+    prisma.data.deleteMany({
+      where: {
+        deviceId: id,
+      },
+    }),
+  ]);
+}
+
 async function getDevice(id: string): Promise<Device | null> {
   return await prisma.device.findFirst({ where: { id } });
 }
@@ -97,10 +108,18 @@ async function createWindow(): Promise<void> {
   });
   ipcMain.handle("ADD_DEVICE", async (_, data) => {
     const newDevice = await createDevice(data);
-    const allDevices = await getAllDevices();
+    const allDevices = await getAllDevices(true);
 
     console.log("added device");
     return { newDevice, devices: allDevices };
+  });
+
+  ipcMain.handle("DELETE_DEVICE", async (_, id) => {
+    await deleteDevice(id);
+    const allDevices = await getAllDevices(true);
+
+    console.log(`deleted device ${id}`);
+    return { devices: allDevices };
   });
 
   ipcMain.handle("GET_DEVICE_DATA", async (_, deviceId) => {
