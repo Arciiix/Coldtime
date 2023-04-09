@@ -39,7 +39,7 @@ export default function DeviceForm({
     defaultValues: {
       name: editedDevice?.name ?? "",
       ip: editedDevice?.ip ?? "",
-      port: editedDevice?.port ?? "",
+      port: editedDevice?.port ?? DEFAULT_PORT,
     },
   });
   const navigate = useNavigate();
