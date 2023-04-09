@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import DeviceDetails from "./components/device/DeviceDetails";
-import AddDevice from "./components/devices/AddDevice/AddDevice";
+import DeviceForm from "./components/devices/DeviceForm/DeviceForm";
 
 import Home from "./components/Home/Home";
 import InitScreen from "./components/init/InitScreen";
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "add",
-            element: <AddDevice />,
+            element: <DeviceForm />,
           },
           {
             path: ":deviceId",

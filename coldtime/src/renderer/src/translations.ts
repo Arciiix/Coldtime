@@ -30,6 +30,9 @@ const translations = {
             },
           },
         },
+        editDevice: {
+          title: "Edit device",
+        },
         deleteDevice: {
           title: "Delete device",
           description: "Are you sure you want to delete this device?",
@@ -106,6 +109,9 @@ const translations = {
                 "Dodajesz nowe urządzenie z ip: {{ ip }}. Nadaj mu nazwę.",
             },
           },
+        },
+        editDevice: {
+          title: "Edytuj urządzenie",
         },
         deleteDevice: {
           title: "Usuń urządzenie",

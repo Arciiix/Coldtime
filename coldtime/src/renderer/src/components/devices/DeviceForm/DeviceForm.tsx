@@ -19,16 +19,29 @@ import deviceListState from "@renderer/state/devices/deviceList";
 const { ipcRenderer } = window.require("electron");
 import { useRecoilState } from "recoil";
 import NetworkDiscovery from "@renderer/components/NetworkDiscovery/NetworkDiscovery";
-import { DEFAULT_PORT } from "@renderer/types/device";
+import { DEFAULT_PORT, IDevice } from "@renderer/types/device";
 
-export default function AddDevice() {
+interface IDeviceFormProps {
+  editedDevice?: IDevice | null;
+  hideTitle?: boolean;
+}
+export default function DeviceForm({
+  editedDevice,
+  hideTitle,
+}: IDeviceFormProps) {
   const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: editedDevice?.name ?? "",
+      ip: editedDevice?.ip ?? "",
+      port: editedDevice?.port ?? "",
+    },
+  });
   const navigate = useNavigate();
   const [allDevices, setAllDevices] = useRecoilState(deviceListState);
 
@@ -36,7 +49,10 @@ export default function AddDevice() {
     setSubmitting(true);
 
     console.log("saving...");
-    const { newDevice, devices } = await ipcRenderer.invoke("ADD_DEVICE", data);
+    const { newDevice, devices } = await ipcRenderer.invoke(
+      editedDevice ? "EDIT_DEVICE" : "ADD_DEVICE",
+      editedDevice ? { ...data, id: editedDevice.id } : data
+    );
 
     setAllDevices(devices);
     navigate(`/device/${newDevice.id}`);
@@ -47,20 +63,28 @@ export default function AddDevice() {
 
   return (
     <div className="m-2 flex flex-col">
-      <Text fontSize="4xl">{t("device.addNewDevice.title")}</Text>
-      <Text fontSize="2xl" color="blue.300">
-        {t("device.addNewDevice.auto")}
-      </Text>
-      <Text fontSize="sm" color="blue.200">
-        {t("device.addNewDevice.autoDesc")}
-      </Text>
-      <NetworkDiscovery />
-      <Text fontSize="2xl" color="yellow.300">
-        {t("device.addNewDevice.orManual")}
-      </Text>
-      <Text fontSize="sm" color="yellow.200">
-        {t("device.addNewDevice.manualDesc")}
-      </Text>
+      {!hideTitle ? (
+        !editedDevice ? (
+          <>
+            <Text fontSize="4xl">{t("device.addNewDevice.title")}</Text>
+            <Text fontSize="2xl" color="blue.300">
+              {t("device.addNewDevice.auto")}
+            </Text>
+            <Text fontSize="sm" color="blue.200">
+              {t("device.addNewDevice.autoDesc")}
+            </Text>
+            <NetworkDiscovery />
+            <Text fontSize="2xl" color="yellow.300">
+              {t("device.addNewDevice.orManual")}
+            </Text>
+            <Text fontSize="sm" color="yellow.200">
+              {t("device.addNewDevice.manualDesc")}
+            </Text>
+          </>
+        ) : (
+          <Text fontSize="4xl">{t("device.editDevice.title")}</Text>
+        )
+      ) : null}
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.name}>
           <FormLabel htmlFor="name">{t("addForm.fields.name")}</FormLabel>
@@ -129,11 +153,9 @@ export default function AddDevice() {
             colorScheme="teal"
             isLoading={submitting}
             isDisabled={submitting}
-            leftIcon={
-              submitting ? <IoIosCheckmarkCircleOutline size="1.2em" /> : <></>
-            }
+            leftIcon={<IoIosCheckmarkCircleOutline size="1.2em" />}
           >
-            {t("addForm.submit")}
+            {editedDevice ? t("save") : t("addForm.submit")}
           </Button>
         </Flex>
       </form>

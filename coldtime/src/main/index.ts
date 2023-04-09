@@ -39,6 +39,14 @@ async function getAllDevices(withState?: boolean): Promise<IDevice[]> {
 async function createDevice(data): Promise<Device> {
   return await prisma.device.create({ data });
 }
+async function editDevice(id: string, data: Partial<Device>): Promise<Device> {
+  return await prisma.device.update({
+    where: {
+      id: id,
+    },
+    data,
+  });
+}
 async function deleteDevice(id: string) {
   await prisma.$transaction([
     prisma.device.delete({ where: { id: id } }),
@@ -111,6 +119,17 @@ async function createWindow(): Promise<void> {
     const allDevices = await getAllDevices(true);
 
     console.log("added device");
+    return { newDevice, devices: allDevices };
+  });
+
+  ipcMain.handle("EDIT_DEVICE", async (_, data) => {
+    // From the object, get the id as a standalone variable and the rest (object with the rest) as editedData
+    const { id, ...editedData } = data;
+
+    const newDevice = await editDevice(id, editedData);
+    const allDevices = await getAllDevices(true);
+
+    console.log(`edited device ${id}`);
     return { newDevice, devices: allDevices };
   });
 

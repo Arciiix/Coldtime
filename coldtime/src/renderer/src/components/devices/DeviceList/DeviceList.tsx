@@ -3,12 +3,13 @@ import { useConfirmDialog } from "@renderer/context/confirmationDialogContext";
 import useContextMenu from "@renderer/hooks/useContextMenu";
 import deviceListState from "@renderer/state/devices/deviceList";
 import { IDevice } from "@renderer/types/device";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useRecoilState } from "recoil";
 import DeviceCard from "../Device/DeviceCard";
+import EditDeviceModal from "../DeviceForm/EditDeviceModal";
 const { ipcRenderer } = window.require("electron");
 
 interface IDeviceListProps {
@@ -20,6 +21,8 @@ export default function DeviceList(props: IDeviceListProps) {
   const confirmDialog = useConfirmDialog();
 
   const [editedDevice, setEditedDevice] = useState<IDevice | null>(null);
+  const [isEditingDevice, setIsEditingDevice] = useState(false);
+
   const [_, setAllDevices] = useRecoilState(deviceListState);
 
   const onDeviceDelete = async (device: IDevice) => {
@@ -50,7 +53,7 @@ export default function DeviceList(props: IDeviceListProps) {
             {
               label: t("device.contextMenu.edit"),
               prefix: <MdEdit />,
-              handler: () => null, // TODO
+              handler: () => setIsEditingDevice(true),
             },
             {
               label: t("device.contextMenu.delete"),
@@ -61,6 +64,11 @@ export default function DeviceList(props: IDeviceListProps) {
         : [],
     [editedDevice]
   );
+
+  const handleEditDeviceModalClose = useCallback(() => {
+    setIsEditingDevice(false);
+    setEditedDevice(null);
+  }, []);
 
   const { isOpen, menu, onContextMenu } = useContextMenu(options);
 
@@ -84,6 +92,11 @@ export default function DeviceList(props: IDeviceListProps) {
 
   return (
     <>
+      <EditDeviceModal
+        isOpen={isEditingDevice}
+        onClose={handleEditDeviceModalClose}
+        editedDevice={editedDevice}
+      />
       <SimpleGrid
         spacing={"30px"}
         templateColumns="repeat(auto-fill, minmax(275px, 1fr))"
