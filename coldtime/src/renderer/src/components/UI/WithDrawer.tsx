@@ -4,7 +4,7 @@ import Drawer from "./Drawer";
 
 export default function WithDrawer() {
   return (
-    <div className="flex w-screen">
+    <div className="flex">
       <Drawer />
       <Box w={"80px"}></Box>
       <div className="flex-1">

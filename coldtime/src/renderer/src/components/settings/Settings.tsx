@@ -56,7 +56,7 @@ const Settings = () => {
   }, [settings]);
 
   return (
-    <Box borderWidth="1px" m={8} borderRadius="lg" px={8}>
+    <Box borderWidth="1px" m={12} borderRadius="lg" px={8}>
       <LoadingOverlay isLoading={isLoading} />
 
       <Flex justifyContent="center" flexDir="column" alignItems="center">
