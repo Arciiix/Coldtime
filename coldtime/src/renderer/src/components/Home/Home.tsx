@@ -51,6 +51,7 @@ export default function Home() {
       display="flex"
       flexDirection="column"
       m={2}
+      p={4}
       userSelect="none"
       gridGap={4}
     >

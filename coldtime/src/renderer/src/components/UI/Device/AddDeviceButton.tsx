@@ -16,6 +16,7 @@ export default function AddDeviceButton() {
         justifyContent="center"
         w="50px"
         h="50px"
+        flexShrink="0"
         borderRadius="50%"
         bgGradient="linear(to-tr, teal.300, blue.400)"
         bgSize="300% 100%"

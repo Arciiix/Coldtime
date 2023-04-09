@@ -81,6 +81,7 @@ export default function Drawer() {
             size="lg"
             m={4}
             variant="outline"
+            flexShrink="0"
           >
             <MdSettings />
           </IconButton>
