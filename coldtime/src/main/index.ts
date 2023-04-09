@@ -39,6 +39,7 @@ let mainWindow: BrowserWindow;
 let tray: Tray;
 
 let isRedIcon: boolean = false;
+let isQuitting = false;
 
 let jobs: ReturnType<typeof setInterval>[] = [];
 
@@ -164,18 +165,21 @@ async function createContextMenu() {
       },
     },
     { type: "separator" },
-    ...allDevices.map((e) => ({
-      label: e.name,
-      click: () => {
-        mainWindow.webContents.send("NAVIGATE_TO_DEVICE", e.id);
-        mainWindow.show();
-      },
-      checked: true,
-    })),
+    ...[...allDevices]
+      .sort((a, _) => (a.lastState?.isConnected ? -1 : 1))
+      .map((e) => ({
+        label: e.name,
+        click: () => {
+          mainWindow.webContents.send("NAVIGATE_TO_DEVICE", e.id);
+          mainWindow.show();
+        },
+        checked: true,
+      })),
     { type: "separator" },
     {
       label: i18next.t("tray.quit").toString(),
       click: () => {
+        isQuitting = true;
         app.quit();
       },
     },
@@ -259,21 +263,30 @@ async function createWindow(): Promise<void> {
 
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
+
+    tray = new Tray(icon);
+    createContextMenu();
+
+    tray.on("click", () => {
+      mainWindow.show();
+    });
+
+    tray.setToolTip("Coldtime");
+  });
+
+  // Minimize to tray on close, instead of actually quitting
+  mainWindow.on("close", (event) => {
+    if (!isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+      event.returnValue = false;
+    }
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: "deny" };
   });
-
-  tray = new Tray(icon);
-  createContextMenu();
-
-  tray.on("click", () => {
-    mainWindow.show();
-  });
-
-  tray.setToolTip("Coldtime");
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
@@ -430,6 +443,10 @@ app.on("window-all-closed", async () => {
 
   // Close prisma connection
   await prisma.$disconnect();
+});
+
+app.on("before-quit", function () {
+  isQuitting = true;
 });
 
 // In this file you can include the rest of your app"s specific main process
