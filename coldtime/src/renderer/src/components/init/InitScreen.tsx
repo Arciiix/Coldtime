@@ -1,20 +1,18 @@
-import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
+import { Box, Flex, Heading, Image } from "@chakra-ui/react";
 import updateSettings from "@renderer/fetch/settings/updateSettings";
 import settingsState from "@renderer/state/settings/settings";
 import { Language } from "@renderer/types/settings";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import LanguageSelect from "../settings/LanguageSelect";
+import TypingTextAnim from "../UI/TypingTextAnim";
 
 const WelcomePage = () => {
   const navigate = useNavigate();
 
   const [_, setSettings] = useRecoilState(settingsState);
 
-  const [textIndex, setTextIndex] = useState(0);
-  const [text, setText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [typingSpeed, setTypingSpeed] = useState(100);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLanguageClick = async (lang: Language) => {
@@ -24,34 +22,6 @@ const WelcomePage = () => {
     setSettings(newSettings);
     navigate("/");
   };
-
-  useEffect(() => {
-    const TYPED_TEXTS = ["Welcome to Coldtime!", "Witamy w Coldtime!"];
-    const handleTyping = () => {
-      const currentText = TYPED_TEXTS[textIndex];
-
-      if (isDeleting) {
-        setText(currentText.substring(0, text.length - 1));
-      } else {
-        setText(currentText.substring(0, text.length + 1));
-      }
-
-      if (!isDeleting && text === currentText) {
-        setTimeout(() => {
-          setIsDeleting(true);
-          setTypingSpeed(50);
-        }, 1000);
-      } else if (isDeleting && text === "") {
-        setIsDeleting(false);
-        setTextIndex((textIndex + 1) % TYPED_TEXTS.length);
-        setTypingSpeed(100);
-      }
-    };
-
-    const typingInterval = setTimeout(handleTyping, typingSpeed);
-
-    return () => clearTimeout(typingInterval);
-  }, [text, textIndex, isDeleting, typingSpeed]);
 
   return (
     <Flex
@@ -85,41 +55,14 @@ const WelcomePage = () => {
         color="white"
         textAlign={"center"}
       >
-        {text}
+        <TypingTextAnim
+          texts={["Welcome to Coldtime!", "Witamy w Coldtime!"]}
+        />
       </Heading>
-      <Flex mb={8} px={2} direction={{ base: "column", sm: "row" }} gap={2}>
-        <Button
-          disabled={isLoading}
-          onClick={() => handleLanguageClick("pl")}
-          mr={4}
-          leftIcon={
-            <Image
-              src="/src/assets/poland.svg"
-              alt="Polski"
-              w={"30px"}
-              h={"30px"}
-            />
-          }
-        >
-          Polski
-        </Button>
-
-        <Button
-          disabled={isLoading}
-          onClick={() => handleLanguageClick("en")}
-          mr={4}
-          leftIcon={
-            <Image
-              src="/src/assets/usa.svg"
-              alt="English"
-              w={"30px"}
-              h={"30px"}
-            />
-          }
-        >
-          English
-        </Button>
-      </Flex>
+      <LanguageSelect
+        handleLanguageClick={handleLanguageClick}
+        isLoading={isLoading}
+      />
     </Flex>
   );
 };

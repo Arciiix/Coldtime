@@ -5,7 +5,6 @@ import deviceListState from "@renderer/state/devices/deviceList";
 import { IDevice } from "@renderer/types/device";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useRecoilState } from "recoil";
 import DeviceCard from "../Device/DeviceCard";

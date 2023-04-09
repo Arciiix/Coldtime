@@ -75,6 +75,19 @@ const translations = {
           port: "Invalid port number - it has to fit within the range 0-65535",
         },
       },
+      settings: {
+        settings: "Settings",
+        checkInterval: "Check interval",
+        checkIntervalDesc:
+          "Frequency of monitoring the device, e.g. connection state",
+        saveInterval: "Save interval",
+        saveIntervalDesc:
+          "Frequency of persisting the data in the database (for charts, table etc.)",
+      },
+      duration: {
+        minutes: "Minutes",
+        seconds: "Seconds",
+      },
     },
   },
   pl: {
@@ -154,6 +167,13 @@ const translations = {
           ip: "Niepoprawny adres IP",
           port: "Nieprawidłowy numer portu: musi należeć do zakresu 0-65535",
         },
+      },
+      settings: {
+        settings: "Ustawienia",
+      },
+      duration: {
+        minutes: "Minuty",
+        seconds: "Sekundy",
       },
     },
   },

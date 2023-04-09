@@ -3,12 +3,16 @@ import { prisma } from ".";
 
 export const defaultSettings: ISettings = {
   language: "en",
+  checkInterval: 30, // In seconds
+  saveInterval: 60,
 };
 
 export type Language = "en" | "pl";
 
 export interface ISettings {
   language: Language;
+  checkInterval: number; // In seconds
+  saveInterval: number; // In seconds
 }
 
 export type ISettingsDetails = {
@@ -20,10 +24,10 @@ export type IUpdateSettings = Partial<ISettings>;
 function convertSettings(value: Settings[]): ISettingsDetails {
   const updatedSettings = {} as ISettingsDetails;
   for (const [key, val] of Object.entries(defaultSettings)) {
-    updatedSettings[key as keyof ISettings] = { value: val, isDefault: true };
+    updatedSettings[key] = { value: val, isDefault: true };
   }
   for (const item of value) {
-    updatedSettings[item.key as keyof ISettings] = {
+    updatedSettings[item.key] = {
       value: item.value as ISettings[keyof ISettings],
       isDefault: false,
     };

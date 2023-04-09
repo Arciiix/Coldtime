@@ -4,6 +4,7 @@ import DeviceForm from "./components/devices/DeviceForm/DeviceForm";
 
 import Home from "./components/Home/Home";
 import InitScreen from "./components/init/InitScreen";
+import Settings from "./components/settings/Settings";
 import WithDrawer from "./components/UI/WithDrawer";
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
             element: <DeviceDetails />,
           },
         ],
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
       {
         path: "*",

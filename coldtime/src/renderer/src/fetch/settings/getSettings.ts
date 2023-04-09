@@ -1,6 +1,10 @@
 import { ISettingsDetails } from "@renderer/types/settings";
+import i18next from "i18next";
 const { ipcRenderer } = window.require("electron");
 
 export default async function getSettings(): Promise<ISettingsDetails> {
-  return await ipcRenderer.invoke("GET_SETTINGS");
+  const settings: ISettingsDetails = await ipcRenderer.invoke("GET_SETTINGS");
+
+  i18next.changeLanguage(settings.language.value);
+  return settings;
 }

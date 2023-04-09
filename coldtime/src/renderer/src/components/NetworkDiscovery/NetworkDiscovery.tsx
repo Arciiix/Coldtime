@@ -29,7 +29,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import DeviceCard from "../devices/Device/DeviceCard";
-import Loading from "../UI/Loading";
+import Loading from "../UI/Loading/Loading";
 
 const { ipcRenderer } = window.require("electron");
 

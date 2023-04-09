@@ -92,7 +92,7 @@ export default function DeviceForm({
             id="name"
             type="text"
             {...register("name", { required: true })}
-            disabled={submitting}
+            isDisabled={submitting}
           />
           {errors.name && (
             <FormErrorMessage>
@@ -113,7 +113,7 @@ export default function DeviceForm({
                 message: t("addForm.errors.ip"),
               },
             })}
-            disabled={submitting}
+            isDisabled={submitting}
           />
           {errors.ip && (
             <FormErrorMessage>
@@ -137,7 +137,7 @@ export default function DeviceForm({
                 message: t("addForm.errors.port"),
               },
             })}
-            disabled={submitting}
+            isDisabled={submitting}
           />
           {errors.port && (
             <FormErrorMessage>

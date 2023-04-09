@@ -1,9 +1,13 @@
-import { Box, Divider, Image } from "@chakra-ui/react";
+import { Box, Divider, IconButton, Image, Tooltip } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { MdSettings } from "react-icons/md";
 import { Link } from "react-router-dom";
 import AddDeviceButton from "./Device/AddDeviceButton";
 import DrawerDeviceList from "./Device/DrawerDeviceList";
 
 export default function Drawer() {
+  const { t } = useTranslation();
+
   return (
     <div className="h-screen fixed top-0 w-[72px] py-3 pl-1">
       <Box
@@ -68,6 +72,19 @@ export default function Drawer() {
         <DrawerDeviceList />
         <Divider my={4} />
         <AddDeviceButton />
+        <Tooltip label={t("settings.settings")}>
+          <IconButton
+            as={Link}
+            to={"/settings"}
+            aria-label={t("settings.settings")}
+            rounded="full"
+            size="lg"
+            m={4}
+            variant="outline"
+          >
+            <MdSettings />
+          </IconButton>
+        </Tooltip>
       </Box>
     </div>
   );
