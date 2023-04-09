@@ -21,6 +21,11 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
   const temperature = lastState?.data?.temperature;
   const date = lastState?.date;
 
+  // Data is considered stale if it's older than a minute; the component is gray
+  const isStale = date
+    ? new Date().getTime() - new Date(date).getTime() > 1000 * 60
+    : false;
+
   const formattedDate = useMemo(
     () => (date ? formatDateToTimestamp(date) : t("device.status.noData")),
     [date]
@@ -35,7 +40,9 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
       to={overrideLink ?? `/device/${id}`}
       bg="transparent"
       boxShadow={
-        isOnline
+        isStale
+          ? ""
+          : isOnline
           ? "0 8px 32px 0 rgba(31, 38, 135, 0.37)"
           : "0 12px 24px 0 rgba(47, 48, 18, 0.37)"
       }
@@ -53,7 +60,9 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
       transition=".3s"
       _hover={{
         transform: "translateY(-10px)",
-        boxShadow: isOnline
+        boxShadow: isStale
+          ? ""
+          : isOnline
           ? "0 12px 24px 0 rgba(31, 38, 135, 0.5)"
           : "0 12px 24px 0 rgba(92, 94, 21, 0.5)",
       }}
@@ -65,7 +74,9 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
         width="100%"
         height="100%"
         bgGradient={
-          isOnline
+          isStale
+            ? "linear(to-b, #535f5f, #23262b)"
+            : isOnline
             ? "linear(to-b, #64dfdf, #8eb9f6)"
             : "linear(135deg, rgba(153, 15, 118, 0.5), rgba(107, 86, 2, 0.5))"
         }

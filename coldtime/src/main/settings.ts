@@ -1,4 +1,5 @@
 import { Prisma, Settings } from "@prisma/client";
+import i18next from "i18next";
 import { prisma } from ".";
 
 export const defaultSettings: ISettings = {
@@ -32,12 +33,16 @@ function convertSettings(value: Settings[]): ISettingsDetails {
       isDefault: false,
     };
   }
+
   return updatedSettings;
 }
 
 export async function getSettings(): Promise<ISettingsDetails> {
   const settings = await prisma.settings.findMany({});
-  return convertSettings(settings);
+  const convertedSettings = convertSettings(settings);
+  i18next.changeLanguage(convertedSettings.language.value);
+
+  return convertedSettings;
 }
 
 export async function updateSettings(

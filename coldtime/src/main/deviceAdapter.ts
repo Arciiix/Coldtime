@@ -12,7 +12,8 @@ export interface IDataFormat {
 
 export async function fetchDeviceData(
   ipWithPort: string,
-  deviceId: string
+  deviceId: string,
+  dontPersist?: boolean
 ): Promise<IDeviceState> {
   try {
     const request = await axios.get(
@@ -35,13 +36,20 @@ export async function fetchDeviceData(
       },
     };
 
-    saveData(dataParsed, deviceId);
+    if (!dontPersist) {
+      saveData(dataParsed, deviceId);
+    }
 
     return dataParsed;
   } catch (err) {
     // TODO
     console.error(err);
-    throw new Error("Error while getting device data: " + err?.toString());
+    // throw new Error("Error while getting device data: " + err?.toString());
+    return {
+      isConnected: false,
+      date: new Date(),
+      data: undefined,
+    };
   }
 }
 

@@ -1,23 +1,130 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { BrowserWindow, Notification, app, ipcMain, shell } from "electron";
 import { join } from "path";
-import icon from "../../resources/icon.png?asset";
+// import icon from "../../resources/icon.png?asset";
+import icon from "../../resources/logo.png?asset";
 
 import { Data, Device, PrismaClient } from "@prisma/client";
+import { IDevice } from "./device";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
-import getLastState, { IDeviceStateRequired } from "./deviceState";
+import getLastState, {
+  IDeviceState,
+  IDeviceStateRequired,
+} from "./deviceState";
 import discoverNetwork from "./networkDiscovery";
 import {
-  getSettings,
   ISettingsDetails,
   IUpdateSettings,
+  getSettings,
   updateSettings,
 } from "./settings";
-import { IDevice } from "./device";
+
+// Init translations
+import i18next from "i18next";
+import "./i18n";
 
 export const prisma = new PrismaClient();
 
 let settings: ISettingsDetails;
+let mainWindow: BrowserWindow;
+
+let jobs: ReturnType<typeof setInterval>[] = [];
+
+// It's a pair of id:isOnline states - if one changes, the notification is sent
+let deviceStates: Map<string, boolean> = new Map();
+
+async function handleRefreshData(justCheck: boolean, device: IDevice) {
+  console.log(
+    `Refreshing data for ${
+      device.id
+    } at ${new Date().toISOString()} (justCheck: ${justCheck})`
+  );
+  const data = await fetchDeviceData(
+    device.ip + ":" + device.port,
+    device.id,
+    !justCheck
+  );
+
+  mainWindow.webContents.send("REFRESH_DATA", { id: device.id, data });
+  console.log(deviceStates);
+  if (data.isConnected !== (deviceStates.get(device.id) ?? false)) {
+    deviceStates.set(device.id, data.isConnected);
+    console.log(
+      `Status of ${device.id} changed to ${
+        data.isConnected
+      } at ${new Date().toISOString()}`
+    );
+
+    const notification = new Notification({
+      title: i18next
+        .t("statusChangeNotification.title", {
+          deviceName: device.name,
+        })
+        .toString(),
+      body: i18next
+        .t("statusChangeNotification.message", {
+          status: data.isConnected ? "online" : "offline",
+        })
+        .toString(),
+      icon: icon,
+    });
+
+    notification.on("click", (e) => {
+      // When user clicks on the notification, navigate to the device
+      mainWindow.webContents.send("NAVIGATE_TO_DEVICE", device.id);
+      mainWindow.show();
+    });
+
+    notification.show();
+
+    if (justCheck) {
+      // If the current action is check-only, wihtout saving to the db
+      // Save this event into the db (it's about connection state change, so it's important)
+      await saveData(data, device.id);
+    }
+  }
+}
+
+function generateDeviceStates(devices: IDevice[]): Map<string, boolean> {
+  // It's a pair of id:isOnline states - if one changes, the notification is sent
+
+  let newDeviceStates: Map<string, boolean> = new Map();
+
+  devices.forEach((device) => {
+    newDeviceStates.set(
+      device.id,
+      device.id in deviceStates ? deviceStates.get(device.id)! : false // If the previous deviceStates map exists and has the device, set its "isOnline" status to the previous value; otherwise - to false
+    );
+  });
+
+  deviceStates = newDeviceStates;
+  return deviceStates;
+}
+
+async function initJobs() {
+  const devices = await getAllDevices();
+
+  devices.forEach((device) => {
+    jobs.push(
+      setInterval(() => {
+        handleRefreshData(true, device);
+      }, settings.checkInterval.value * 1000)
+    );
+
+    jobs.push(
+      setInterval(() => {
+        handleRefreshData(false, device);
+      }, settings.saveInterval.value * 1000)
+    );
+
+    handleRefreshData(true, device);
+  });
+}
+
+async function recreateJobs() {
+  jobs.forEach((e) => clearInterval(e));
+  await initJobs();
+}
 
 async function getAllDevices(withState?: boolean): Promise<IDevice[]> {
   const devices = await prisma.device.findMany({});
@@ -64,7 +171,7 @@ async function getDevice(id: string): Promise<Device | null> {
 
 async function createWindow(): Promise<void> {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
 
@@ -74,7 +181,9 @@ async function createWindow(): Promise<void> {
 
     darkTheme: true,
 
-    ...(process.platform === "linux" ? { icon } : {}),
+    icon: icon,
+
+    // ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
@@ -202,9 +311,14 @@ async function createWindow(): Promise<void> {
 
   ipcMain.handle("UPDATE_SETTINGS", async (_, newSettings: IUpdateSettings) => {
     settings = await updateSettings(newSettings);
+    await recreateJobs();
 
     return settings;
   });
+
+  initJobs();
+  const allDevices = await getAllDevices();
+  generateDeviceStates(allDevices);
 }
 
 // This method will be called when Electron has finished
@@ -246,7 +360,7 @@ app.on("window-all-closed", async () => {
 // code. You can also put them in separate files and require them here.
 
 export async function saveData(
-  state: IDeviceStateRequired,
+  state: IDeviceState,
   deviceId: string
 ): Promise<Data> {
   const data = await prisma.data.create({
@@ -255,8 +369,8 @@ export async function saveData(
       isConnected: state.isConnected,
       date: new Date(),
 
-      isRunning: state.data.isRunning,
-      temperature: state.data.temperature,
+      isRunning: state.data?.isRunning ?? undefined,
+      temperature: state.data?.temperature ?? undefined,
     },
   });
 

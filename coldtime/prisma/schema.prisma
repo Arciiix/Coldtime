@@ -28,8 +28,8 @@ model Data {
   date        DateTime @default(now())
   isConnected Boolean  @default(true)
 
-  temperature Float
-  isRunning   Boolean
+  temperature Float?
+  isRunning   Boolean?
 }
 
 model Settings {
