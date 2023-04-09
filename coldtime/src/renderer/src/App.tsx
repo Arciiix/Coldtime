@@ -1,7 +1,6 @@
 import { Box, ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { RouterProvider } from "react-router";
 import { RecoilRoot } from "recoil";
-import AppBar from "./components/UI/AppBar";
 import {
   ConfirmationDialog,
   ConfirmationDialogProvider,

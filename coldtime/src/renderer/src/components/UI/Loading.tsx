@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { PacmanLoader } from "react-spinners";
 import { LoaderSizeMarginProps } from "react-spinners/helpers/props";

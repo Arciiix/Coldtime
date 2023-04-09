@@ -1,4 +1,4 @@
-import { Box, Divider, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import getSettings from "@renderer/fetch/settings/getSettings";
 import deviceListState from "@renderer/state/devices/deviceList";
 import settingsState from "@renderer/state/settings/settings";
@@ -8,14 +8,13 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import DeviceList from "../devices/DeviceList/DeviceList";
-import NetworkDiscovery from "../NetworkDiscovery/NetworkDiscovery";
 
 const { ipcRenderer } = window.require("electron");
 
 export default function Home() {
   const navigate = useNavigate();
 
-  const [settings, setSettings] = useRecoilState(settingsState);
+  const [_, setSettings] = useRecoilState(settingsState);
 
   const { t } = useTranslation();
   const [deviceList, setDeviceList] = useRecoilState(deviceListState);
@@ -41,7 +40,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchOnInit().then((e) => {
+    fetchOnInit().then((_) => {
       fetchDevices();
     });
   }, []);

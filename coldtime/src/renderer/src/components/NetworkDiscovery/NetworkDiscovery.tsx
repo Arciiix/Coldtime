@@ -10,7 +10,6 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Input,
   Skeleton,
@@ -19,17 +18,15 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  Text,
 } from "@chakra-ui/react";
 import deviceListState from "@renderer/state/devices/deviceList";
 import networkDiscoveryState from "@renderer/state/network/networkDiscovery";
-import { DEFAULT_PORT, IDevice } from "@renderer/types/device";
+import { DEFAULT_PORT } from "@renderer/types/device";
 import { INetworkDiscoveryDevice } from "@renderer/types/networkDiscoveryDevice";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { PacmanLoader } from "react-spinners";
 import { useRecoilState } from "recoil";
 import DeviceCard from "../devices/Device/DeviceCard";
 import Loading from "../UI/Loading";

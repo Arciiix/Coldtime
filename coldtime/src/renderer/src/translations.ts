@@ -37,6 +37,7 @@ const translations = {
         contextMenu: {
           edit: "Edit",
           delete: "Delete",
+          openInNewWindow: "Open in new window",
         },
         date: "date",
         temperature: "temperature",
@@ -113,6 +114,7 @@ const translations = {
         contextMenu: {
           edit: "Edytuj",
           delete: "Usuń",
+          openInNewWindow: "Otwórz w nowym oknie",
         },
         date: "data",
         temperature: "temperatura",

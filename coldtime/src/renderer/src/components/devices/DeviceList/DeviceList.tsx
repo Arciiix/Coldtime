@@ -5,11 +5,10 @@ import deviceListState from "@renderer/state/devices/deviceList";
 import { IDevice } from "@renderer/types/device";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useRecoilState } from "recoil";
-import Device from "../Device/Device";
 import DeviceCard from "../Device/DeviceCard";
-import NewDevice from "./NewDevice";
 const { ipcRenderer } = window.require("electron");
 
 interface IDeviceListProps {
@@ -21,10 +20,9 @@ export default function DeviceList(props: IDeviceListProps) {
   const confirmDialog = useConfirmDialog();
 
   const [editedDevice, setEditedDevice] = useState<IDevice | null>(null);
-  const [allDevices, setAllDevices] = useRecoilState(deviceListState);
+  const [_, setAllDevices] = useRecoilState(deviceListState);
 
   const onDeviceDelete = async (device: IDevice) => {
-    console.log("try");
     // Ask for user confirmation
     const isConfirmed = await confirmDialog(
       t("device.deleteDevice.title"),
@@ -41,6 +39,14 @@ export default function DeviceList(props: IDeviceListProps) {
     () =>
       editedDevice
         ? [
+            // TODO
+            // {
+            //   label: t("device.contextMenu.openInNewWindow"),
+            //   prefix: <FaExternalLinkAlt />,
+            //   handler: () => {
+
+            //   },
+            // },
             {
               label: t("device.contextMenu.edit"),
               prefix: <MdEdit />,

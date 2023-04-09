@@ -9,7 +9,7 @@ import { useRecoilState } from "recoil";
 const WelcomePage = () => {
   const navigate = useNavigate();
 
-  const [settings, setSettings] = useRecoilState(settingsState);
+  const [_, setSettings] = useRecoilState(settingsState);
 
   const [textIndex, setTextIndex] = useState(0);
   const [text, setText] = useState("");

@@ -1,13 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  Box,
-  MenuItem,
-  MenuList,
-  Menu,
-  MenuButton,
-  useColorModeValue,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, Flex, Menu, MenuItem, MenuList } from "@chakra-ui/react";
+import { useCallback, useState } from "react";
 
 type Option = {
   label: string;
