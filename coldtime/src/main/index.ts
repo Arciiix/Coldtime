@@ -286,7 +286,7 @@ async function createWindow(): Promise<void> {
   // TODO DEV
   ipcMain.handle(
     "GET_HISTORICAL_DATA",
-    async (_, deviceId): Promise<IDeviceStateRequired[]> => {
+    async (_, deviceId): Promise<IDeviceState[]> => {
       const data = await prisma.data.findMany({
         where: { deviceId },
         orderBy: {
@@ -297,10 +297,13 @@ async function createWindow(): Promise<void> {
       return data.map((e) => ({
         isConnected: e.isConnected,
         date: e.date,
-        data: {
-          isRunning: e.isRunning,
-          temperature: e.temperature,
-        },
+        data:
+          e.isRunning !== null
+            ? {
+                isRunning: e.isRunning!,
+                temperature: e.temperature!,
+              }
+            : undefined,
       }));
     }
   );
