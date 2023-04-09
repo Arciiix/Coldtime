@@ -170,6 +170,12 @@ const translations = {
       },
       settings: {
         settings: "Ustawienia",
+        checkInterval: "Częstotliwość sprawdzania",
+        checkIntervalDesc:
+          "Częstotliwość monitorowania urządzenia, np. stanu połączenia",
+        saveInterval: "Częstotliwość zapisywania",
+        saveIntervalDesc:
+          "Częstotliwość zapisywania w bazie danych (dla wykresów, tabel itp.)",
       },
       duration: {
         minutes: "Minuty",

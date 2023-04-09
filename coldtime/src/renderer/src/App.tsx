@@ -21,7 +21,8 @@ function App(): JSX.Element {
             h="100vh"
             w="100vw"
             bgImage="radial-gradient(at 47% 33%, hsl(233.85, 59%, 13%) 0, transparent 59%), 
-            radial-gradient(at 82% 65%, hsl(163.33, 40%, 9%) 0, transparent 55%);"
+            radial-gradient(at 82% 65%, hsl(163.33, 40%, 9%) 0, transparent 55%),
+            radial-gradient(at 22% 55%, hsl(163.33, 20%, 9%) 0, transparent 40%);"
           >
             <RouterProvider router={router} />
           </Box>
