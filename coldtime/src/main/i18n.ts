@@ -10,6 +10,10 @@ const translations: Resource = {
         online: "online",
         offline: "offline",
       },
+      tray: {
+        open: "Open dashboard",
+        quit: "Quit",
+      },
     },
   },
   pl: {
@@ -20,6 +24,10 @@ const translations: Resource = {
           "Urządzenie jest teraz $t(statusChangeNotification.{{ status }})",
         online: "dostępne",
         offline: "niedostępne",
+      },
+      tray: {
+        open: "Otwórz dashboard",
+        quit: "Wyjdź",
       },
     },
   },

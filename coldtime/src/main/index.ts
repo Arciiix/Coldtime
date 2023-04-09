@@ -1,8 +1,17 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { BrowserWindow, Notification, app, ipcMain, shell } from "electron";
+import {
+  BrowserWindow,
+  Menu,
+  Notification,
+  Tray,
+  app,
+  ipcMain,
+  shell,
+} from "electron";
 import { join } from "path";
 // import icon from "../../resources/icon.png?asset";
 import icon from "../../resources/logo.png?asset";
+import iconRed from "../../resources/logo-red.png?asset";
 
 import { Data, Device, PrismaClient } from "@prisma/client";
 import { IDevice } from "./device";
@@ -27,6 +36,9 @@ export const prisma = new PrismaClient();
 
 let settings: ISettingsDetails;
 let mainWindow: BrowserWindow;
+let tray: Tray;
+
+let isRedIcon: boolean = false;
 
 let jobs: ReturnType<typeof setInterval>[] = [];
 
@@ -66,7 +78,7 @@ async function handleRefreshData(justCheck: boolean, device: IDevice) {
           status: data.isConnected ? "online" : "offline",
         })
         .toString(),
-      icon: icon,
+      icon: data.isConnected ? icon : iconRed,
     });
 
     notification.on("click", (e) => {
@@ -82,6 +94,21 @@ async function handleRefreshData(justCheck: boolean, device: IDevice) {
       // Save this event into the db (it's about connection state change, so it's important)
       await saveData(data, device.id);
     }
+  }
+
+  // If any of the devices is disconnected, change the icon to the red version in the tray; otherwise, keep it default
+  // Also, check if the icon hasn't been already changed
+  if (Array.from(deviceStates.values()).some((isConnected) => !isConnected)) {
+    if (!isRedIcon) {
+      console.log("Change icon to red");
+      isRedIcon = true;
+      tray.setImage(iconRed);
+    }
+  } else if (isRedIcon) {
+    console.log("Change icon to default");
+
+    isRedIcon = false;
+    tray.setImage(icon);
   }
 }
 
@@ -126,6 +153,36 @@ async function recreateJobs() {
   await initJobs();
 }
 
+async function createContextMenu() {
+  const allDevices = await getAllDevices();
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: i18next.t("tray.open").toString(),
+      click: () => {
+        mainWindow.show();
+      },
+    },
+    { type: "separator" },
+    ...allDevices.map((e) => ({
+      label: e.name,
+      click: () => {
+        mainWindow.webContents.send("NAVIGATE_TO_DEVICE", e.id);
+        mainWindow.show();
+      },
+      checked: true,
+    })),
+    { type: "separator" },
+    {
+      label: i18next.t("tray.quit").toString(),
+      click: () => {
+        app.quit();
+      },
+    },
+  ]);
+  tray.setContextMenu(contextMenu);
+}
+
 async function getAllDevices(withState?: boolean): Promise<IDevice[]> {
   const devices = await prisma.device.findMany({});
 
@@ -144,15 +201,21 @@ async function getAllDevices(withState?: boolean): Promise<IDevice[]> {
   return parsed;
 }
 async function createDevice(data): Promise<Device> {
-  return await prisma.device.create({ data });
+  const result = await prisma.device.create({ data });
+
+  createContextMenu();
+
+  return result;
 }
 async function editDevice(id: string, data: Partial<Device>): Promise<Device> {
-  return await prisma.device.update({
+  const result = await prisma.device.update({
     where: {
       id: id,
     },
     data,
   });
+  createContextMenu();
+  return result;
 }
 async function deleteDevice(id: string) {
   await prisma.$transaction([
@@ -163,6 +226,7 @@ async function deleteDevice(id: string) {
       },
     }),
   ]);
+  createContextMenu();
 }
 
 async function getDevice(id: string): Promise<Device | null> {
@@ -201,6 +265,15 @@ async function createWindow(): Promise<void> {
     shell.openExternal(details.url);
     return { action: "deny" };
   });
+
+  tray = new Tray(icon);
+  createContextMenu();
+
+  tray.on("click", () => {
+    mainWindow.show();
+  });
+
+  tray.setToolTip("Coldtime");
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.

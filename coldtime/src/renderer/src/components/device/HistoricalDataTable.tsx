@@ -43,9 +43,9 @@ export default function HistoryTable({
           {historyData.map((data, index) => (
             <Tr key={index}>
               <Td>{new Date(data.date).toLocaleString()}</Td>
-              <Td>{data.data.temperature}°C</Td>
+              <Td>{data.data?.temperature}°C</Td>
               <Td>
-                {data.data.isRunning ? (
+                {data.data?.isRunning ? (
                   <span
                     style={{
                       color: "#10B981",
