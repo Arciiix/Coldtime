@@ -41,7 +41,7 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
       bg="transparent"
       boxShadow={
         isStale
-          ? ""
+          ? "0 8px 32px 0 rgba(43, 39, 58, 0.37)"
           : isOnline
           ? "0 8px 32px 0 rgba(31, 38, 135, 0.37)"
           : "0 12px 24px 0 rgba(47, 48, 18, 0.37)"
@@ -61,7 +61,7 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
       _hover={{
         transform: "translateY(-10px)",
         boxShadow: isStale
-          ? ""
+          ? "0 8px 32px 0 rgba(43, 39, 58, 0.5)"
           : isOnline
           ? "0 12px 24px 0 rgba(31, 38, 135, 0.5)"
           : "0 12px 24px 0 rgba(92, 94, 21, 0.5)",

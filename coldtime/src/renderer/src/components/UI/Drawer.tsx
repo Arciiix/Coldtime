@@ -11,7 +11,6 @@ export default function Drawer() {
   return (
     <div className="h-screen fixed top-0 w-[72px] py-3 pl-1">
       <Box
-        bg="gray.700"
         backdropFilter="blur(20px) saturate(150%)"
         borderRadius="xl"
         boxShadow="md"
@@ -47,7 +46,7 @@ export default function Drawer() {
         }}
       >
         <Box
-          bg="whiteAlpha.200"
+          bg="whiteAlpha.300"
           filter="blur(20px)"
           height="100%"
           position="absolute"
