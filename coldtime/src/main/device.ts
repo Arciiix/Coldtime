@@ -8,3 +8,8 @@ export interface IDevice {
 
   lastState: IDeviceState | null;
 }
+
+export interface IDeviceStats {
+  lastIsRunningChange: Date | null;
+  averageTemperatureToday: number | null;
+}

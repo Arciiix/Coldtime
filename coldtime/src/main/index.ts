@@ -10,16 +10,13 @@ import {
 } from "electron";
 import { join } from "path";
 // import icon from "../../resources/icon.png?asset";
-import icon from "../../resources/logo.png?asset";
 import iconRed from "../../resources/logo-red.png?asset";
+import icon from "../../resources/logo.png?asset";
 
 import { Data, Device, PrismaClient } from "@prisma/client";
 import { IDevice } from "./device";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
-import getLastState, {
-  IDeviceState,
-  IDeviceStateRequired,
-} from "./deviceState";
+import getLastState, { IDeviceState, getDeviceStats } from "./deviceState";
 import discoverNetwork from "./networkDiscovery";
 import {
   ISettingsDetails,
@@ -52,11 +49,7 @@ async function handleRefreshData(justCheck: boolean, device: IDevice) {
       device.id
     } at ${new Date().toISOString()} (justCheck: ${justCheck})`
   );
-  const data = await fetchDeviceData(
-    device.ip + ":" + device.port,
-    device.id,
-    !justCheck
-  );
+  const data = await fetchDeviceData(device.id, !justCheck);
 
   mainWindow.webContents.send("REFRESH_DATA", { id: device.id, data });
   console.log(deviceStates);
@@ -233,7 +226,7 @@ async function deleteDevice(id: string) {
   createContextMenu();
 }
 
-async function getDevice(id: string): Promise<Device | null> {
+export async function getDevice(id: string): Promise<Device | null> {
   return await prisma.device.findFirst({ where: { id } });
 }
 
@@ -337,21 +330,7 @@ async function createWindow(): Promise<void> {
   });
 
   ipcMain.handle("GET_DEVICE_DATA", async (_, deviceId) => {
-    const device = await prisma.device.findFirst({
-      where: {
-        id: deviceId,
-      },
-    });
-
-    if (!device) {
-      throw new Error("Couldn't find device by id!");
-      // TODO
-    }
-
-    const data = await fetchDeviceData(
-      device.ip + ":" + device.port,
-      device.id
-    );
+    const data = await fetchDeviceData(deviceId);
     return { data };
   });
 
@@ -367,6 +346,11 @@ async function createWindow(): Promise<void> {
 
   ipcMain.handle("GET_DEVICE_DATA_BY_IP", (_, ip) => {
     return fetchDeviceDataByIpOnly(ip);
+  });
+
+  ipcMain.handle("GET_DEVICE_STATS", (_, deviceId: string) => {
+    // Returns promise
+    return getDeviceStats(deviceId);
   });
 
   // TODO DEV

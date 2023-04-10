@@ -11,9 +11,17 @@ interface IDeviceProps {
   device: IDevice;
   overrideLink?: string | null;
   onContextMenu?: MouseEventHandler;
+
+  // For displaying it in the device details tab
+  noAnim?: boolean;
 }
 
-const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
+const DeviceCard = ({
+  device,
+  overrideLink,
+  onContextMenu,
+  noAnim,
+}: IDeviceProps) => {
   const { t } = useTranslation();
   const { id, name, ip, port, lastState } = device;
 
@@ -30,8 +38,6 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
     () => (date ? formatDateToTimestamp(date) : t("device.status.noData")),
     [date]
   );
-
-  console.log(device);
 
   return (
     <Box
@@ -58,14 +64,18 @@ const DeviceCard = ({ device, overrideLink, onContextMenu }: IDeviceProps) => {
       position="relative"
       overflow="hidden"
       transition=".3s"
-      _hover={{
-        transform: "translateY(-10px)",
-        boxShadow: isStale
-          ? "0 8px 32px 0 rgba(43, 39, 58, 0.5)"
-          : isOnline
-          ? "0 12px 24px 0 rgba(31, 38, 135, 0.5)"
-          : "0 12px 24px 0 rgba(92, 94, 21, 0.5)",
-      }}
+      _hover={
+        noAnim
+          ? { cursor: "default" }
+          : {
+              transform: "translateY(-10px)",
+              boxShadow: isStale
+                ? "0 8px 32px 0 rgba(43, 39, 58, 0.5)"
+                : isOnline
+                ? "0 12px 24px 0 rgba(31, 38, 135, 0.5)"
+                : "0 12px 24px 0 rgba(92, 94, 21, 0.5)",
+            }
+      }
     >
       <Box
         position="absolute"

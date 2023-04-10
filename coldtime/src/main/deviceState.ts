@@ -1,5 +1,7 @@
 import { Data } from "@prisma/client";
 import { prisma } from ".";
+import { IDeviceStats } from "./device";
+import { fetchDeviceData } from "./deviceAdapter";
 
 export interface IDeviceState {
   isConnected: boolean;
@@ -34,9 +36,56 @@ export function convertData(data: Data): IDeviceState {
     date: data.date,
     data: data.isConnected
       ? {
-          temperature: data.temperature,
-          isRunning: data.isConnected,
+          temperature: data.temperature!,
+          isRunning: data.isConnected!,
         }
       : undefined,
   };
+}
+
+export async function getDeviceStats(id: string): Promise<IDeviceStats> {
+  const currentStatus = await fetchDeviceData(id, true);
+
+  const stats: IDeviceStats = {
+    lastIsRunningChange: null,
+    averageTemperatureToday: null,
+  };
+
+  if (currentStatus.data) {
+    const isRunningChange = await prisma.data.findFirst({
+      where: {
+        deviceId: id,
+        isRunning: !currentStatus.data.isRunning,
+      },
+      select: {
+        date: true,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+
+    if (isRunningChange) {
+      stats.lastIsRunningChange = isRunningChange.date;
+    }
+  }
+
+  const todayMidnight = new Date();
+  todayMidnight.setHours(0, 0, 0, 0);
+
+  const averageTemperature = await prisma.data.aggregate({
+    where: {
+      deviceId: id,
+      isConnected: true,
+      date: {
+        gte: todayMidnight,
+      },
+    },
+    _avg: {
+      temperature: true,
+    },
+  });
+  stats.averageTemperatureToday = averageTemperature._avg.temperature;
+
+  return stats;
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { saveData } from ".";
+import { getDevice, saveData } from ".";
 import { IDeviceState, IDeviceStateRequired } from "./deviceState";
 
 export interface IDataFormat {
@@ -11,13 +11,17 @@ export interface IDataFormat {
 }
 
 export async function fetchDeviceData(
-  ipWithPort: string,
   deviceId: string,
   dontPersist?: boolean
 ): Promise<IDeviceState> {
+  const device = await getDevice(deviceId);
+  if (!device) {
+    throw new Error(`Couldn't find device ${deviceId}`);
+  }
+
   try {
     const request = await axios.get(
-      "http://" + ipWithPort + "/api/v1/school/status",
+      "http://" + device.ip + ":" + device.port + "/api/v1/school/status",
       {
         headers: {
           "Content-Type": "application/json",

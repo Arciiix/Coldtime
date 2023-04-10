@@ -47,12 +47,18 @@ const translations = {
         isRunning: "status",
         status: {
           dataFrom: "Data from: {{ date }}",
-          connected: "ONLINE",
-          disconnected: "OFFILNE",
+          connected: "Online",
+          disconnected: "Offline",
           on: "on",
           off: "off",
+          temperature: "Temperature",
           lastUpdated: "Last updated: {{ date }}",
           noData: "No data available",
+        },
+        stats: {
+          allAlong: "All along",
+          never: "Never",
+          averageTemperatureToday: "Average temperature today",
         },
         errors: {
           gettingData: "Error while getting the data: {{ error }}",
@@ -140,12 +146,18 @@ const translations = {
         isRunning: "status",
         status: {
           dataFrom: "Dane z: {{ date }}",
-          connected: "ONLINE",
-          disconnected: "OFFLINE",
+          connected: "Połączono",
+          disconnected: "Rozłączono",
           on: "wł.",
           off: "wył.",
+          temperature: "Temperatura",
           lastUpdated: "Ostatnia aktualizacja: {{ date }}",
           noData: "Brak danych",
+        },
+        stats: {
+          allAlong: "Od zawsze",
+          never: "Nigdy",
+          averageTemperatureToday: "Średnia temperatura dzisiaj",
         },
         errors: {
           gettingData: "Błąd podczas pobierania danych: {{ error }}",

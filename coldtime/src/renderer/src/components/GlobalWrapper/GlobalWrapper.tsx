@@ -11,27 +11,36 @@ export default function GlobalWrapper() {
   const [allDevices, setAllDevices] = useRecoilState(deviceListState);
 
   useEffect(() => {
-    ipcRenderer.on("NAVIGATE_TO_DEVICE", (_, deviceId: string) => {
+    const onDataRefresh = (
+      _,
+      { id, data }: { id: string; data: IDeviceState }
+    ) => {
+      console.log("Refresh data");
+      setAllDevices((prev) => {
+        return prev.map((e) =>
+          e.id === id
+            ? {
+                ...e,
+                lastState: data,
+              }
+            : e
+        );
+      });
+    };
+
+    const navigateToDevice = (_, deviceId: string) => {
       console.log("Navigate to device");
       navigate(`/device/${deviceId}`);
-    });
+    };
 
-    ipcRenderer.on(
-      "REFRESH_DATA",
-      (_, { id, data }: { id: string; data: IDeviceState }) => {
-        console.log("Refresh data");
-        setAllDevices((prev) => {
-          return prev.map((e) =>
-            e.id === id
-              ? {
-                  ...e,
-                  lastState: data,
-                }
-              : e
-          );
-        });
-      }
-    );
+    ipcRenderer.on("NAVIGATE_TO_DEVICE", navigateToDevice);
+
+    ipcRenderer.on("REFRESH_DATA", onDataRefresh);
+
+    return () => {
+      ipcRenderer.removeListener("REFRESH_DATA", onDataRefresh);
+      ipcRenderer.removeListener("NAVIGATE_TO_DEVICE", navigateToDevice);
+    };
   }, []);
 
   return (
