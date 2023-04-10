@@ -73,6 +73,15 @@ const translations = {
         lastPage: "Last page",
         pageSize: "Page size",
       },
+      export: {
+        excel: "Export to Excel (.xlsx)",
+        csv: "Export to CSV",
+        json: "Export to JSON",
+        isConnected: "isConnected",
+        date: "date",
+        temperature: "temperature",
+        isRunning: "isRunning",
+      },
       addForm: {
         submit: "Create",
         fields: {
@@ -178,6 +187,15 @@ const translations = {
         nextPage: "Następna strona",
         lastPage: "Ostatnia strona",
         pageSize: "Ilość elementów na stronie",
+      },
+      export: {
+        excel: "Eksport do Excela (.xlsx)",
+        csv: "Eksport do CSV",
+        json: "Eksport do JSONa",
+        isConnected: "czyPolaczono",
+        date: "data",
+        temperature: "temperatura",
+        isRunning: "czyWlaczone",
       },
       addForm: {
         submit: "Dodaj",

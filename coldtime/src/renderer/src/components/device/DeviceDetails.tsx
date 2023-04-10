@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Divider,
   Flex,
   Grid,
@@ -8,10 +9,14 @@ import {
   Icon,
   IconButton,
   Text,
-  useToast,
 } from "@chakra-ui/react";
 import settingsState from "@renderer/state/settings/settings";
 import { IDevice, IDeviceState, IDeviceStats } from "@renderer/types/device";
+import {
+  exportToCSV,
+  exportToExcel,
+  exportToJSON,
+} from "@renderer/utils/exportData";
 import {
   endOfDay,
   formatDateAgo,
@@ -21,6 +26,8 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaWifi } from "react-icons/fa";
+import { FaFileExcel, FaFileCsv, FaFile } from "react-icons/fa";
+
 import {
   MdOutlinePowerSettingsNew,
   MdOutlineShowChart,
@@ -260,6 +267,37 @@ export default function DeviceDetails() {
           onSubmit={() => handleRefresh(true)}
           disabled={isRefreshing}
         />
+        <Divider />
+
+        <Flex justifyContent="center" gap={2} my={3} p={2}>
+          <Button
+            colorScheme="green"
+            variant="outline"
+            leftIcon={<FaFileExcel />}
+            onClick={() => exportToExcel(deviceData, historicalData)}
+            mr={2}
+          >
+            {t("export.excel")}
+          </Button>
+          <Button
+            colorScheme="orange"
+            variant="outline"
+            leftIcon={<FaFileCsv />}
+            onClick={() => exportToCSV(deviceData, historicalData)}
+            mr={2}
+          >
+            {t("export.csv")}
+          </Button>
+          <Button
+            colorScheme="blue"
+            variant="outline"
+            leftIcon={<FaFile />}
+            onClick={() => exportToJSON(deviceData, historicalData)}
+          >
+            {t("export.json")}
+          </Button>
+        </Flex>
+
         <Divider />
         <HistoricalDataTable
           historyData={historicalData}

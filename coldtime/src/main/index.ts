@@ -5,6 +5,7 @@ import {
   Notification,
   Tray,
   app,
+  dialog,
   ipcMain,
   shell,
 } from "electron";
@@ -24,6 +25,7 @@ import {
   getSettings,
   updateSettings,
 } from "./settings";
+import fs from "fs";
 
 // Init translations
 import i18next from "i18next";
@@ -393,6 +395,27 @@ async function createWindow(): Promise<void> {
     await recreateJobs();
 
     return settings;
+  });
+
+  ipcMain.handle("SAVE_FILE", async (_, data, fileName, fileType) => {
+    const defaultPath = app.getPath("desktop");
+    const defaultFilename = `${fileName}`;
+    const { filePath } = await dialog.showSaveDialog({
+      defaultPath: `${defaultPath}/${defaultFilename}`,
+      filters: [{ name: fileName, extensions: [fileName.split(".").at(-1)] }],
+    });
+
+    if (filePath) {
+      const bufferData = Buffer.from(data);
+      fs.writeFile(filePath, bufferData, (err) => {
+        if (err) {
+          console.error("Error saving file:", err.message);
+        } else {
+          console.log("File saved successfully!");
+          shell.openPath(filePath);
+        }
+      });
+    }
   });
 
   initJobs();
