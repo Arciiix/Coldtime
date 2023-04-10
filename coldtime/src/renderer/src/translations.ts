@@ -44,6 +44,7 @@ const translations = {
         },
         date: "date",
         temperature: "temperature",
+        connectionState: "Connection state",
         isRunning: "status",
         status: {
           dataFrom: "Data from: {{ date }}",
@@ -65,7 +66,13 @@ const translations = {
         },
       },
       goBack: "Go back",
-
+      pagination: {
+        firstPage: "First page",
+        previousPage: "Previous page",
+        nextPage: "Next page",
+        lastPage: "Last page",
+        pageSize: "Page size",
+      },
       addForm: {
         submit: "Create",
         fields: {
@@ -143,6 +150,7 @@ const translations = {
         },
         date: "data",
         temperature: "temperatura",
+        connectionState: "Stan połączenia",
         isRunning: "status",
         status: {
           dataFrom: "Dane z: {{ date }}",
@@ -164,7 +172,13 @@ const translations = {
         },
       },
       goBack: "Cofnij",
-
+      pagination: {
+        firstPage: "Pierwsza strona",
+        previousPage: "Ostatnia strona",
+        nextPage: "Następna strona",
+        lastPage: "Ostatnia strona",
+        pageSize: "Ilość elementów na stronie",
+      },
       addForm: {
         submit: "Dodaj",
         fields: {

@@ -13,8 +13,10 @@ import {
 import settingsState from "@renderer/state/settings/settings";
 import { IDevice, IDeviceState, IDeviceStats } from "@renderer/types/device";
 import {
+  endOfDay,
   formatDateAgo,
   formatDateToTimestamp,
+  startOfDay,
 } from "@renderer/utils/formatDate";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -25,9 +27,11 @@ import {
   MdRefresh,
   MdThermostat,
 } from "react-icons/md";
+import { DateObject, toDateObject } from "react-multi-date-picker";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import LoadingOverlay from "../UI/Loading/LoadingOverlay";
+import RangeDatePicker from "../UI/RangeDatePicker";
 import HistoricalDataTable from "./HistoricalDataTable";
 
 const { ipcRenderer } = window.require("electron");
@@ -35,7 +39,6 @@ const { ipcRenderer } = window.require("electron");
 export default function DeviceDetails() {
   const { t } = useTranslation();
   const { deviceId: id } = useParams();
-  const toast = useToast();
 
   const settings = useRecoilValue(settingsState);
 
@@ -47,6 +50,13 @@ export default function DeviceDetails() {
   const [currentState, setCurrentState] = useState<IDeviceState | null>(null);
   const [deviceData, setDeviceData] = useState<IDevice | null>(null);
   const [deviceStats, setDeviceStats] = useState<IDeviceStats | null>(null);
+
+  const [startDate, setStartDate] = useState<DateObject>(
+    toDateObject(new Date(new Date().getTime() - 1000 * 60 * 60 * 24))
+  ); // one day earlier
+  const [endDate, setEndDate] = useState<DateObject>(toDateObject(new Date()));
+
+  const [page, setPage] = useState(0);
 
   const [historicalData, setHistoricalData] = useState<IDeviceState[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -73,18 +83,6 @@ export default function DeviceDetails() {
     } catch (err) {
       setCurrentState(null);
       console.error(`Error while getting data: ${err}`);
-
-      // if (prevErrorToastIdRef.current) {
-      //   toast.close(prevErrorToastIdRef.current);
-      // }
-
-      // prevErrorToastIdRef.current = toast({
-      //   title: t("error"),
-      //   description: t("device.errors.gettingData", { error: err?.toString() }),
-      //   status: "error",
-      //   duration: 9000,
-      //   isClosable: true,
-      // });
     }
   };
 
@@ -101,18 +99,32 @@ export default function DeviceDetails() {
     setDeviceStats(stats);
   };
 
-  const handleRefresh = async () => {
+  const handleRefresh = async (historicalDataAsWell?: boolean) => {
     setIsRefreshing(true);
 
     await getDeviceData();
     await getDeviceStats();
 
-    const data = await ipcRenderer.invoke("GET_HISTORICAL_DATA", id);
-    setHistoricalData(data satisfies IDeviceState[]);
+    if (historicalDataAsWell) {
+      const data = await ipcRenderer.invoke("GET_HISTORICAL_DATA", {
+        id,
+        start: startOfDay(startDate.toDate()),
+        end: endOfDay(endDate.toDate()),
+        page: page,
+      });
+      setHistoricalData(data satisfies IDeviceState[]);
+      console.log(data);
+    }
     setIsRefreshing(false);
   };
 
+  const handleDateChange = (dates: [DateObject, DateObject]) => {
+    setStartDate(dates[0]);
+    setEndDate(dates[1]);
+  };
+
   useEffect(() => {
+    setPage(0);
     setCurrentState(null);
     setDeviceData(null);
 
@@ -126,7 +138,7 @@ export default function DeviceDetails() {
       // TODO: Add refresh interval
     );
 
-    getDeviceInfo().then(() => handleRefresh());
+    getDeviceInfo().then(() => handleRefresh(true));
 
     return () => {
       clearInterval(interval);
@@ -232,7 +244,7 @@ export default function DeviceDetails() {
                 aria-label={t("refresh")}
                 variant="ghost"
                 rounded="full"
-                onClick={handleRefresh}
+                onClick={() => handleRefresh(false)}
                 isLoading={isRefreshing}
                 isDisabled={isRefreshing}
               >
@@ -241,10 +253,17 @@ export default function DeviceDetails() {
             </Flex>
           </GridItem>
         </Grid>
+
+        <RangeDatePicker
+          value={[startDate, endDate]}
+          onChange={handleDateChange}
+          onSubmit={() => handleRefresh(true)}
+          disabled={isRefreshing}
+        />
         <Divider />
         <HistoricalDataTable
           historyData={historicalData}
-          handleRefresh={handleRefresh}
+          handleRefresh={() => handleRefresh(true)}
           isRefreshing={isRefreshing}
         />
       </Flex>

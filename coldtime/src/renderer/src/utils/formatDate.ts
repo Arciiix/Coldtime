@@ -19,6 +19,12 @@ const units: Partial<Record<Intl.RelativeTimeFormatUnit, number>> = {
   second: 1_000,
 };
 
+export const formatDate = (date: Date) => {
+  return formatter
+    .format(date)
+    .replace(/^(\d{2})\/(\d{2})\/(\d{4}).*$/, "$3-$1-$2"); // Changes "mm/dd/yyyy hh:mm:ss" to "yyyy-mm-dd"
+};
+
 export const formatDateToTimestamp = (date: Date): string => {
   return formatter.format(date).replace(/(\d+)\/(\d+)\/(\d+)/, "$3-$1-$2"); // Changes "mm/dd/yyyy hh:mm:ss" to "yyyy-mm-dd hh:mm:ss"
 };
@@ -42,4 +48,18 @@ export const formatTimeAgo = (timeInMs: number): string => {
   }
 
   return rtf.format(Math.floor(timeInMs / 1000), "second");
+};
+
+export const startOfDay = (date: Date): Date => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  return new Date(year, month, day);
+};
+
+export const endOfDay = (date: Date): Date => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  return new Date(year, month, day, 23, 59, 59, 999);
 };
