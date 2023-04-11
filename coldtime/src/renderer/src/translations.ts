@@ -8,6 +8,7 @@ const translations = {
       cancel: "Cancel",
       confirm: "Confirm",
       save: "Save",
+      clear: "Clear",
       drawer: {
         addDevice: "Add device",
       },
@@ -66,6 +67,7 @@ const translations = {
         },
       },
       goBack: "Go back",
+      noDateSet: "No date set",
       pagination: {
         firstPage: "First page",
         previousPage: "Previous page",
@@ -81,6 +83,11 @@ const translations = {
         date: "date",
         temperature: "temperature",
         isRunning: "isRunning",
+      },
+      chart: {
+        chartGreen: "Running",
+        chartRed: "Not running",
+        chartGray: "Disconnected",
       },
       addForm: {
         submit: "Create",
@@ -121,6 +128,7 @@ const translations = {
       cancel: "Anuluj",
       confirm: "Potwierdź",
       save: "Zapisz",
+      clear: "Wyczyść",
       drawer: {
         addDevice: "Dodaj urządzenie",
       },
@@ -180,6 +188,7 @@ const translations = {
           gettingData: "Błąd podczas pobierania danych: {{ error }}",
         },
       },
+      noDateSet: "Nie ustawiono daty",
       goBack: "Cofnij",
       pagination: {
         firstPage: "Pierwsza strona",
@@ -196,6 +205,11 @@ const translations = {
         date: "data",
         temperature: "temperatura",
         isRunning: "czyWlaczone",
+      },
+      chart: {
+        chartGreen: "Włączone",
+        chartRed: "Wyłączone",
+        chartGray: "Rozłączone",
       },
       addForm: {
         submit: "Dodaj",

@@ -33,6 +33,9 @@ import "./i18n";
 
 export const prisma = new PrismaClient();
 
+// const MAX_DATA_POINTS = 100; // TODO: Should be a setting
+const MAX_DATA_POINTS = 300; // TODO: Should be a setting
+
 let settings: ISettingsDetails;
 let mainWindow: BrowserWindow;
 let tray: Tray;
@@ -51,7 +54,7 @@ async function handleRefreshData(justCheck: boolean, device: IDevice) {
       device.id
     } at ${new Date().toISOString()} (justCheck: ${justCheck})`
   );
-  const data = await fetchDeviceData(device.id, !justCheck);
+  const data = await fetchDeviceData(device.id, justCheck);
 
   mainWindow.webContents.send("REFRESH_DATA", { id: device.id, data });
   console.log(deviceStates);
@@ -358,7 +361,14 @@ async function createWindow(): Promise<void> {
   // TODO DEV
   ipcMain.handle(
     "GET_HISTORICAL_DATA",
-    async (_, { id, start, end }): Promise<IDeviceState[]> => {
+    async (
+      _,
+      { id, start, end }
+    ): Promise<{
+      data: IDeviceState[];
+      numberOfDataPointsStripped: number;
+    }> => {
+      console.log(`Get historical data ${start} to ${end}`);
       const data = await prisma.data.findMany({
         where: {
           deviceId: id,
@@ -372,17 +382,37 @@ async function createWindow(): Promise<void> {
         },
       });
 
-      return data.map((e) => ({
-        isConnected: e.isConnected,
-        date: e.date,
-        data:
-          e.isRunning !== null
-            ? {
-                isRunning: e.isRunning!,
-                temperature: e.temperature!,
-              }
-            : undefined,
-      }));
+      // If there is too many data points - it may crush the app and cause a lot of trouble
+      let newData: Data[] = [];
+      if (data.length > MAX_DATA_POINTS) {
+        for (
+          let i = 0;
+          i < data.length;
+          i += Math.floor(data.length / MAX_DATA_POINTS)
+        ) {
+          newData.push(data[i]);
+        }
+      } else {
+        newData = data;
+      }
+
+      return {
+        data: (newData || data).map((e) => ({
+          isConnected: e.isConnected,
+          date: e.date,
+          data:
+            e.isRunning !== null
+              ? {
+                  isRunning: e.isRunning!,
+                  temperature: e.temperature!,
+                }
+              : undefined,
+        })),
+        numberOfDataPointsStripped: Math.max(
+          (newData || data).length - MAX_DATA_POINTS,
+          0
+        ),
+      };
     }
   );
 

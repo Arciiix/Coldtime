@@ -49,17 +49,3 @@ export const formatTimeAgo = (timeInMs: number): string => {
 
   return rtf.format(Math.floor(timeInMs / 1000), "second");
 };
-
-export const startOfDay = (date: Date): Date => {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-  return new Date(year, month, day);
-};
-
-export const endOfDay = (date: Date): Date => {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-  return new Date(year, month, day, 23, 59, 59, 999);
-};

@@ -13,3 +13,7 @@ export default theme;
 
 // DEV
 localStorage.setItem("chakra-ui-color-mode", "dark");
+
+export const CHART_GREEN = "#00FF00";
+export const CHART_RED = "#FF0000";
+export const CHART_GRAY = "#808080";

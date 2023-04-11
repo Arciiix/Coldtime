@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { usePagination } from "@renderer/hooks/usePagination";
 import { IDeviceState } from "@renderer/types/device";
+import { formatDateToTimestamp } from "@renderer/utils/formatDate";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaWifi } from "react-icons/fa";
@@ -71,7 +72,7 @@ export default function HistoryTable({
         <Tbody>
           {currentPageData.map((data, index) => (
             <Tr key={index}>
-              <Td>{new Date(data.date).toLocaleString()}</Td>
+              <Td>{formatDateToTimestamp(new Date(data.date))}</Td>
               <Td>
                 <Icon
                   as={FaWifi}
