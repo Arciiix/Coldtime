@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import LanguageSelect from "../settings/LanguageSelect";
+import MadeWithHeart from "../UI/MadeWithHeart";
 import TypingTextAnim from "../UI/TypingTextAnim";
 
 const WelcomePage = () => {
@@ -63,6 +64,7 @@ const WelcomePage = () => {
         handleLanguageClick={handleLanguageClick}
         isLoading={isLoading}
       />
+      <MadeWithHeart />
     </Flex>
   );
 };

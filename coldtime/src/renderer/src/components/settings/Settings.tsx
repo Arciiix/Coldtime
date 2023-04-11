@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import DurationInput from "../UI/inputs/DurationInput";
 import LoadingOverlay from "../UI/Loading/LoadingOverlay";
+import MadeWithHeart from "../UI/MadeWithHeart";
 import TypingTextAnim from "../UI/TypingTextAnim";
 import LanguageSelect from "./LanguageSelect";
 
@@ -117,6 +118,7 @@ const Settings = () => {
           onClick={handleSave}
         />
       </Flex>
+      <MadeWithHeart />
     </Box>
   );
 };
