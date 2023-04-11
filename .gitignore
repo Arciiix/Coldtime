@@ -1,3 +1,5 @@
 # Sensitive documents
 Documents/
 
+# Build
+coldtime/dist.zip
