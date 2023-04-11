@@ -1,13 +1,13 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import {
-  BrowserWindow,
-  Menu,
-  Notification,
-  Tray,
   app,
+  BrowserWindow,
   dialog,
   ipcMain,
+  Menu,
+  Notification,
   shell,
+  Tray,
 } from "electron";
 import { join } from "path";
 // import icon from "../../resources/icon.png?asset";
@@ -15,17 +15,17 @@ import iconRed from "../../resources/logo-red.png?asset";
 import icon from "../../resources/logo.png?asset";
 
 import { Data, Device, PrismaClient } from "@prisma/client";
+import fs from "fs";
 import { IDevice } from "./device";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
-import getLastState, { IDeviceState, getDeviceStats } from "./deviceState";
+import getLastState, { getDeviceStats, IDeviceState } from "./deviceState";
 import discoverNetwork from "./networkDiscovery";
 import {
+  getSettings,
   ISettingsDetails,
   IUpdateSettings,
-  getSettings,
   updateSettings,
 } from "./settings";
-import fs from "fs";
 
 // Init translations
 import i18next from "i18next";
@@ -80,7 +80,7 @@ async function handleRefreshData(justCheck: boolean, device: IDevice) {
       icon: data.isConnected ? icon : iconRed,
     });
 
-    notification.on("click", (e) => {
+    notification.on("click", (_) => {
       // When user clicks on the notification, navigate to the device
       mainWindow.webContents.send("NAVIGATE_TO_DEVICE", device.id);
       mainWindow.show();
@@ -427,7 +427,7 @@ async function createWindow(): Promise<void> {
     return settings;
   });
 
-  ipcMain.handle("SAVE_FILE", async (_, data, fileName, fileType) => {
+  ipcMain.handle("SAVE_FILE", async (_, data, fileName, __) => {
     const defaultPath = app.getPath("desktop");
     const defaultFilename = `${fileName}`;
     const { filePath } = await dialog.showSaveDialog({

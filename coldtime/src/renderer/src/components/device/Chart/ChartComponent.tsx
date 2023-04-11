@@ -4,7 +4,7 @@ import { IDeviceState } from "@renderer/types/device";
 import fillDataGaps from "@renderer/utils/fillGaps";
 import { formatDateToTimestamp } from "@renderer/utils/formatDate";
 import { ApexOptions } from "apexcharts";
-import React, { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import Chart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";

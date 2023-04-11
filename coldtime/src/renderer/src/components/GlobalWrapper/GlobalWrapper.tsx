@@ -8,7 +8,7 @@ const { ipcRenderer } = window.require("electron");
 
 export default function GlobalWrapper() {
   const navigate = useNavigate();
-  const [allDevices, setAllDevices] = useRecoilState(deviceListState);
+  const [_, setAllDevices] = useRecoilState(deviceListState);
 
   useEffect(() => {
     const onDataRefresh = (

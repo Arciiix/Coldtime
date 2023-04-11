@@ -1,11 +1,10 @@
 import {
   Center,
   Modal,
-  ModalOverlay,
-  ModalContent,
   ModalBody,
+  ModalContent,
+  ModalOverlay,
 } from "@chakra-ui/react";
-import { PacmanLoader } from "react-spinners";
 import Loading from "./Loading";
 
 const LoadingOverlay = ({ isLoading }) => {

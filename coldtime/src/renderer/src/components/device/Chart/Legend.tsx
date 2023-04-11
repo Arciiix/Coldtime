@@ -1,4 +1,4 @@
-import { Flex, Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { CHART_GRAY, CHART_GREEN, CHART_RED } from "@renderer/theme";
 import { useTranslation } from "react-i18next";
 

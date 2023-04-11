@@ -1,4 +1,3 @@
-import { Language } from "./settings";
 import i18next, { Resource } from "i18next";
 
 const translations: Resource = {
