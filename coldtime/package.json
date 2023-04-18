@@ -6,6 +6,7 @@
   "author": "example.com",
   "homepage": "https://www.electronjs.org",
   "build": {
+    "compression": "maximum",
     "extraResources": [
       "prisma/**/*",
       "node_modules/.prisma/**/*",
