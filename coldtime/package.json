@@ -1,7 +1,7 @@
 {
   "name": "coldtime",
-  "version": "1.1.0",
-  "description": "An Electron application with React and TypeScript",
+  "version": "1.2.0",
+  "description": "A desktop app for persisting values (i.e. temperature) over time got from multiple devices. Created for POL-EKO to manage their SMART PRO fridge data.",
   "main": "./out/main/index.js",
   "author": "example.com",
   "homepage": "https://www.electronjs.org",
@@ -10,7 +10,10 @@
       "prisma/**/*",
       "node_modules/.prisma/**/*",
       "node_modules/@prisma/client/**/*"
-    ]
+    ],
+    "win": {
+      "icon": "resources/icon.png"
+    }
   },
   "scripts": {
     "format": "prettier --write .",

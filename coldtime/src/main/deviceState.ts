@@ -49,6 +49,8 @@ export async function getDeviceStats(id: string): Promise<IDeviceStats> {
   const stats: IDeviceStats = {
     lastIsRunningChange: null,
     averageTemperatureToday: null,
+
+    currentState: currentStatus,
   };
 
   if (currentStatus.data) {

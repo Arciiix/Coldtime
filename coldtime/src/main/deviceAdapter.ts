@@ -14,6 +14,7 @@ export async function fetchDeviceData(
   deviceId: string,
   dontPersist?: boolean
 ): Promise<IDeviceState> {
+  console.log("get device data");
   const device = await getDevice(deviceId);
   if (!device) {
     throw new Error(`Couldn't find device ${deviceId}`);
@@ -26,8 +27,15 @@ export async function fetchDeviceData(
         headers: {
           "Content-Type": "application/json",
         },
+        timeout: 5000,
       }
     );
+    if (!request.data)
+      return {
+        isConnected: false,
+        date: new Date(),
+        data: undefined,
+      };
     const data: IDataFormat = request.data;
 
     const dataParsed: IDeviceStateRequired = {
@@ -47,7 +55,7 @@ export async function fetchDeviceData(
     return dataParsed;
   } catch (err) {
     // TODO
-    console.error(err);
+    // console.error(err);
     // throw new Error("Error while getting device data: " + err?.toString());
     return {
       isConnected: false,

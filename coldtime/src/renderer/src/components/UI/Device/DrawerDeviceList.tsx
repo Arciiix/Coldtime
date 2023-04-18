@@ -46,7 +46,7 @@ export default function DrawerDeviceList() {
             //   );
 
             return (
-              <Link to={`/device/${id}`}>
+              <Link key={id} to={`/device/${id}`}>
                 <Tooltip label={isOnline ? name : name + " - offline"}>
                   <Avatar
                     {...(!isOnline

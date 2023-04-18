@@ -48,17 +48,26 @@ export default function Home() {
   if (isLoading) return <h1>loading</h1>; /* TODO */
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      m={2}
-      p={4}
-      userSelect="none"
-      gridGap={4}
+      h="100vh"
+      bgImage="radial-gradient(at 47% 33%, hsl(233.85, 59%, 13%) 0, transparent 59%), 
+      radial-gradient(at 82% 65%, hsl(163.33, 40%, 9%) 0, transparent 55%),
+      radial-gradient(at 22% 55%, hsl(163.33, 20%, 9%) 0, transparent 40%),
+      radial-gradient(at 40% 80%, hsl(332, 58%, 13%) 0, transparent 40%);"
     >
-      <Text fontSize="4xl" fontWeight="bold" mb="4">
-        {t("deviceList")}
-      </Text>
-      <DeviceList devices={deviceList} />
+      <Box
+        display="flex"
+        flexDirection="column"
+        p={4}
+        userSelect="none"
+        gridGap={4}
+        overflowY="auto"
+        h={"100%"}
+      >
+        <Text fontSize="4xl" fontWeight="bold" mb="4">
+          {t("deviceList.title")}
+        </Text>
+        <DeviceList devices={deviceList} />
+      </Box>
     </Box>
   );
 }

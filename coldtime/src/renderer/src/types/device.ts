@@ -22,4 +22,6 @@ export const DEFAULT_PORT = 56000;
 export interface IDeviceStats {
   lastIsRunningChange: Date | null;
   averageTemperatureToday: number | null;
+
+  currentState: IDeviceState;
 }

@@ -12,4 +12,6 @@ export interface IDevice {
 export interface IDeviceStats {
   lastIsRunningChange: Date | null;
   averageTemperatureToday: number | null;
+
+  currentState: IDeviceState;
 }

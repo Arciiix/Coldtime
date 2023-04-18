@@ -9,6 +9,7 @@ import {
   Icon,
   IconButton,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import settingsState from "@renderer/state/settings/settings";
 import { IDevice, IDeviceState, IDeviceStats } from "@renderer/types/device";
@@ -39,6 +40,7 @@ import RangeDatePicker from "../UI/RangeDatePicker";
 import ChartComponent from "./Chart/ChartComponent";
 import Legend from "./Chart/Legend";
 import HistoricalDataTable from "./HistoricalDataTable";
+import NoData from "./NoData";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -46,21 +48,24 @@ export default function DeviceDetails() {
   const { t } = useTranslation();
   const { deviceId: id } = useParams();
 
+  const lowerSize = useBreakpointValue({ base: true, xs: true, md: false });
+  console.log(lowerSize);
+
   const settings = useRecoilValue(settingsState);
 
   /*
-    1. currentState - actual state, i.e. isConnected, temperature etc.
-    2. deviceData - general device info, e.g. IP address and name
-    3. deviceStats - device stats, such as lastConnectionStatusChange
+    1. deviceData - general device info, e.g. IP address and name
+    2. deviceStats - device stats, such as lastConnectionStatusChange. it also contains currentState (actual state), i.e. isConnected, temperature etc.
   */
-  const [currentState, setCurrentState] = useState<IDeviceState | null>(null);
   const [deviceData, setDeviceData] = useState<IDevice | null>(null);
   const [deviceStats, setDeviceStats] = useState<IDeviceStats | null>(null);
-  const [numberOfDataPointsStripped, setNumberOfDataPointsStripped] =
-    useState(0);
+  // const [numberOfDataPointsStripped, setNumberOfDataPointsStripped] =
+  //   useState(0);
   const [historicalDataRefreshTime, setHistoricalDataRefreshTime] = useState(
     new Date().getTime()
   );
+
+  const currentState = deviceStats?.currentState;
 
   const [startDate, setStartDate] = useState<DateObject | null>(
     new DateObject(new Date().getTime() - 1000 * 60 * 60)
@@ -87,37 +92,31 @@ export default function DeviceDetails() {
   }, [deviceStats]);
 
   const device: IDevice | null = deviceData
-    ? { ...deviceData, lastState: currentState }
+    ? { ...deviceData, lastState: currentState ?? null }
     : null;
 
-  const getDeviceData = async () => {
-    try {
-      const { data } = await ipcRenderer.invoke("GET_DEVICE_DATA", id);
-      setCurrentState(data);
-    } catch (err) {
-      setCurrentState(null);
-      console.error(`Error while getting data: ${err}`);
-    }
-  };
-
   const getDeviceInfo = async () => {
+    console.log("get device info start");
     const { device } = await ipcRenderer.invoke("GET_DEVICE", id);
     setDeviceData(device);
+    console.log("get device info end");
   };
 
   const getDeviceStats = async () => {
+    console.log("get device stats start");
     const stats = (await ipcRenderer.invoke(
       "GET_DEVICE_STATS",
       id
     )) satisfies IDeviceStats;
     setDeviceStats(stats);
+    console.log(stats);
+    console.log("get device stats end");
   };
 
   const handleRefresh = async (historicalDataAsWell?: boolean) => {
     setIsRefreshing(true);
     console.log("refreshing...");
 
-    await getDeviceData();
     await getDeviceStats();
 
     if (historicalDataAsWell) {
@@ -135,7 +134,8 @@ export default function DeviceDetails() {
         })
       );
 
-      const { data, numberOfDataPointsStripped } = await ipcRenderer.invoke(
+      const { data } = await ipcRenderer.invoke(
+        // const { data, numberOfDataPointsStripped } = await ipcRenderer.invoke(
         "GET_HISTORICAL_DATA",
         {
           id,
@@ -145,7 +145,7 @@ export default function DeviceDetails() {
       );
       setHistoricalData(data satisfies IDeviceState[]);
       setHistoricalDataRefreshTime(new Date().getTime());
-      setNumberOfDataPointsStripped(numberOfDataPointsStripped);
+      // setNumberOfDataPointsStripped(numberOfDataPointsStripped);
       console.log(data);
     }
     setIsRefreshing(false);
@@ -157,13 +157,12 @@ export default function DeviceDetails() {
   };
 
   useEffect(() => {
-    setCurrentState(null);
+    setDeviceStats(null);
     setDeviceData(null);
 
     const interval = setInterval(
       () => {
         console.log("Details refresh");
-        getDeviceData();
         getDeviceStats();
       },
       (settings?.checkInterval.value ?? 30) * 1000
@@ -182,7 +181,7 @@ export default function DeviceDetails() {
     return <h1>loading</h1>;
   }
   return (
-    <Box h="100vh" overflowY={"auto"}>
+    <Box h="100vh" overflowY={"auto"} overflowX="auto" w="100%" maxW="100%">
       <Flex
         direction="column"
         h="full"
@@ -191,17 +190,22 @@ export default function DeviceDetails() {
         py="8"
         textAlign="center"
       >
-        <LoadingOverlay isLoading={isRefreshing} />
+        <LoadingOverlay
+          isLoading={isRefreshing}
+          description={t("device.fetchingDataPleaseWait").toString()}
+          showGoToHomepage
+        />
         <Heading as="h1" size="2xl" my="4">
           {deviceData.name}
         </Heading>
         <Grid
-          templateColumns="repeat(2, 1fr)"
+          gridTemplateColumns={lowerSize ? "1fr" : "repeat(2, 1fr)"}
           gap={6}
           mb="8"
           borderRadius="md"
           boxShadow="base"
           height="max-content"
+          gridAutoFlow={"row"}
           // bg={"gray.800"}
         >
           <GridItem colSpan={1} p="6">
@@ -265,7 +269,7 @@ export default function DeviceDetails() {
               </GridItem>
             </>
           ) : null}
-          <GridItem colSpan={2}>
+          <GridItem colSpan={lowerSize ? 1 : 2}>
             <Flex gap={2} justifyContent="center" alignItems="center" mt="4">
               <Text fontSize="lg">
                 {t("device.status.lastUpdated", { date: formattedDate })}
@@ -291,50 +295,62 @@ export default function DeviceDetails() {
         />
         <Divider />
 
-        <ChartComponent
-          key={historicalDataRefreshTime}
-          data={historicalData}
-          numberOfDataPointsStripped={numberOfDataPointsStripped}
-          dateFrom={startDate?.toUnix() ?? null}
-          dateTo={endDate?.toUnix() ?? null}
-        />
+        {historicalData.length ? (
+          <>
+            <ChartComponent
+              key={historicalDataRefreshTime}
+              data={historicalData}
+              // numberOfDataPointsStripped={numberOfDataPointsStripped}
+              // dateFrom={startDate?.toUnix() ?? null}
+              // dateTo={endDate?.toUnix() ?? null}
+            />
 
-        <Legend />
-        <Divider />
-        <Flex justifyContent="center" gap={2} my={3} p={2}>
-          <Button
-            colorScheme="green"
-            variant="outline"
-            leftIcon={<FaFileExcel />}
-            onClick={() => exportToExcel(deviceData, historicalDataSorted)}
-            mr={2}
-          >
-            {t("export.excel")}
-          </Button>
-          <Button
-            colorScheme="orange"
-            variant="outline"
-            leftIcon={<FaFileCsv />}
-            onClick={() => exportToCSV(deviceData, historicalDataSorted)}
-            mr={2}
-          >
-            {t("export.csv")}
-          </Button>
-          <Button
-            colorScheme="blue"
-            variant="outline"
-            leftIcon={<FaFile />}
-            onClick={() => exportToJSON(deviceData, historicalDataSorted)}
-          >
-            {t("export.json")}
-          </Button>
-        </Flex>
-        <Divider />
-        <HistoricalDataTable
-          historyData={historicalDataSorted}
-          handleRefresh={() => handleRefresh(true)}
-          isRefreshing={isRefreshing}
-        />
+            <Legend />
+            <Divider />
+            <Flex
+              justifyContent="center"
+              flexDir={lowerSize ? "column" : "row"}
+              gap={2}
+              my={3}
+              p={2}
+            >
+              <Button
+                colorScheme="green"
+                variant="outline"
+                leftIcon={<FaFileExcel />}
+                onClick={() => exportToExcel(deviceData, historicalDataSorted)}
+                mr={2}
+              >
+                {t("export.excel")}
+              </Button>
+              <Button
+                colorScheme="orange"
+                variant="outline"
+                leftIcon={<FaFileCsv />}
+                onClick={() => exportToCSV(deviceData, historicalDataSorted)}
+                mr={2}
+              >
+                {t("export.csv")}
+              </Button>
+              <Button
+                colorScheme="blue"
+                variant="outline"
+                leftIcon={<FaFile />}
+                onClick={() => exportToJSON(deviceData, historicalDataSorted)}
+              >
+                {t("export.json")}
+              </Button>
+            </Flex>
+            <Divider />
+            <HistoricalDataTable
+              historyData={historicalDataSorted}
+              handleRefresh={() => handleRefresh(true)}
+              isRefreshing={isRefreshing}
+            />
+          </>
+        ) : (
+          <NoData />
+        )}
       </Flex>
     </Box>
   );

@@ -60,7 +60,13 @@ export default function HistoryTable({
         pageSize={pageSize}
         setPageSize={setPageSize}
       />
-      <Table variant="simple" bg={colorMode === "light" ? "white" : "gray.800"}>
+      <Table
+        variant="simple"
+        bg={colorMode === "light" ? "white" : "gray.800"}
+        size="md"
+        maxW={"min(100%, calc(100vw - 160px))"}
+        marginX="auto"
+      >
         <Thead bg={colorMode === "light" ? "gray.100" : "gray.700"}>
           <Tr>
             <Th>{t("device.date")}</Th>

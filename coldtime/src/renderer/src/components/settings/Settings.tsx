@@ -57,68 +57,76 @@ const Settings = () => {
   }, [settings]);
 
   return (
-    <Box borderWidth="1px" m={12} borderRadius="lg" px={8}>
-      <LoadingOverlay isLoading={isLoading} />
+    <Box
+      h="100vh"
+      bgImage="radial-gradient(at 47% 33%, hsl(233.85, 59%, 13%) 0, transparent 59%), 
+    radial-gradient(at 82% 65%, hsl(163.33, 40%, 9%) 0, transparent 55%),
+    radial-gradient(at 22% 55%, hsl(163.33, 20%, 9%) 0, transparent 40%),
+    radial-gradient(at 40% 80%, hsl(332, 58%, 13%) 0, transparent 40%);"
+    >
+      <Box borderWidth="1px" m={12} borderRadius="lg" px={8}>
+        <LoadingOverlay isLoading={isLoading} />
 
-      <Flex justifyContent="center" flexDir="column" alignItems="center">
-        <MdSettings size={84} />
+        <Flex justifyContent="center" flexDir="column" alignItems="center">
+          <MdSettings size={84} />
+          <Heading
+            mb={6}
+            fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
+            fontWeight="bold"
+            color="white"
+            textAlign={"center"}
+          >
+            {t("settings.settings")}
+          </Heading>
+        </Flex>
+
         <Heading
           mb={6}
-          fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
+          fontSize={{ base: "xl", sm: "2xl", md: "3xl" }}
           fontWeight="bold"
           color="white"
           textAlign={"center"}
         >
-          {t("settings.settings")}
+          <TypingTextAnim texts={["Select language", "Wybierz język"]} />
         </Heading>
-      </Flex>
 
-      <Heading
-        mb={6}
-        fontSize={{ base: "xl", sm: "2xl", md: "3xl" }}
-        fontWeight="bold"
-        color="white"
-        textAlign={"center"}
-      >
-        <TypingTextAnim texts={["Select language", "Wybierz język"]} />
-      </Heading>
+        <Flex justifyContent="center">
+          <LanguageSelect
+            handleLanguageClick={handleLanguageClick}
+            isLoading={isLoading}
+          />
+        </Flex>
 
-      <Flex justifyContent="center">
-        <LanguageSelect
-          handleLanguageClick={handleLanguageClick}
-          isLoading={isLoading}
+        <DurationInput
+          value={checkInterval}
+          onChange={(val) => setCheckInterval(val)}
+          title={t("settings.checkInterval")}
+          helperText={t("settings.checkIntervalDesc") ?? ""}
+          setIsError={setIsCheckIntervalError}
         />
-      </Flex>
 
-      <DurationInput
-        value={checkInterval}
-        onChange={(val) => setCheckInterval(val)}
-        title={t("settings.checkInterval")}
-        helperText={t("settings.checkIntervalDesc") ?? ""}
-        setIsError={setIsCheckIntervalError}
-      />
-
-      <DurationInput
-        value={saveInterval}
-        onChange={(val) => setSaveInterval(val)}
-        title={t("settings.saveInterval")}
-        helperText={t("settings.saveIntervalDesc") ?? ""}
-        setIsError={setIsSaveIntervalError}
-      />
-
-      <Flex justifyContent="end" gap={3} my={3}>
-        <IconButton
-          isDisabled={isError || isLoading}
-          isLoading={isLoading}
-          aria-label={t("save")}
-          icon={<FaSave />}
-          colorScheme="blue"
-          variant="outline"
-          mr={2}
-          onClick={handleSave}
+        <DurationInput
+          value={saveInterval}
+          onChange={(val) => setSaveInterval(val)}
+          title={t("settings.saveInterval")}
+          helperText={t("settings.saveIntervalDesc") ?? ""}
+          setIsError={setIsSaveIntervalError}
         />
-      </Flex>
-      <MadeWithHeart />
+
+        <Flex justifyContent="end" gap={3} my={3}>
+          <IconButton
+            isDisabled={isError || isLoading}
+            isLoading={isLoading}
+            aria-label={t("save")}
+            icon={<FaSave />}
+            colorScheme="blue"
+            variant="outline"
+            mr={2}
+            onClick={handleSave}
+          />
+        </Flex>
+        <MadeWithHeart />
+      </Box>
     </Box>
   );
 };

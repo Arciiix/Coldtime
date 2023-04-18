@@ -9,6 +9,7 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import { useRecoilState } from "recoil";
 import DeviceCard from "../Device/DeviceCard";
 import EditDeviceModal from "../DeviceForm/EditDeviceModal";
+import NoDevices from "./NoDevices";
 const { ipcRenderer } = window.require("electron");
 
 interface IDeviceListProps {
@@ -71,23 +72,23 @@ export default function DeviceList(props: IDeviceListProps) {
 
   const { isOpen, menu, onContextMenu } = useContextMenu(options);
 
-  const devices = useMemo(
-    () =>
-      props.devices.map((e) => {
-        // return <Device {...e} />;
-        return (
-          <DeviceCard
-            onContextMenu={(ev) => {
-              ev.preventDefault();
-              setEditedDevice(e);
-              onContextMenu(ev);
-            }}
-            device={e}
-          />
-        );
-      }),
-    [props.devices]
-  );
+  const devices = useMemo(() => {
+    if (!props.devices || !props.devices.length) return [];
+
+    return props.devices.map((e) => {
+      // return <Device {...e} />;
+      return (
+        <DeviceCard
+          onContextMenu={(ev) => {
+            ev.preventDefault();
+            setEditedDevice(e);
+            onContextMenu(ev);
+          }}
+          device={e}
+        />
+      );
+    });
+  }, [props.devices]);
 
   return (
     <>
@@ -96,14 +97,19 @@ export default function DeviceList(props: IDeviceListProps) {
         onClose={handleEditDeviceModalClose}
         editedDevice={editedDevice}
       />
-      <SimpleGrid
-        spacing={"30px"}
-        templateColumns="repeat(auto-fill, minmax(275px, 1fr))"
-        placeItems={"center"}
-      >
-        {...devices}
-        {/* <NewDevice /> */}
-      </SimpleGrid>
+
+      {devices.length ? (
+        <SimpleGrid
+          spacing={"30px"}
+          templateColumns="repeat(auto-fill, minmax(275px, 1fr))"
+          placeItems={"center"}
+        >
+          {...devices}
+          {/* <NewDevice /> */}
+        </SimpleGrid>
+      ) : (
+        <NoDevices />
+      )}
       {isOpen && menu}
     </>
   );

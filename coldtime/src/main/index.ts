@@ -259,41 +259,6 @@ async function createWindow(): Promise<void> {
     },
   });
 
-  mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
-
-    tray = new Tray(icon);
-    createContextMenu();
-
-    tray.on("click", () => {
-      mainWindow.show();
-    });
-
-    tray.setToolTip("Coldtime");
-  });
-
-  // Minimize to tray on close, instead of actually quitting
-  mainWindow.on("close", (event) => {
-    if (!isQuitting) {
-      event.preventDefault();
-      mainWindow.hide();
-      event.returnValue = false;
-    }
-  });
-
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url);
-    return { action: "deny" };
-  });
-
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
-  }
-
   // Try to fetch the settings
   settings = await getSettings();
   console.log(`Fetched settings: ${JSON.stringify(settings)}`);
@@ -451,6 +416,41 @@ async function createWindow(): Promise<void> {
   initJobs();
   const allDevices = await getAllDevices();
   generateDeviceStates(allDevices);
+
+  mainWindow.on("ready-to-show", () => {
+    mainWindow.show();
+
+    tray = new Tray(icon);
+    createContextMenu();
+
+    tray.on("click", () => {
+      mainWindow.show();
+    });
+
+    tray.setToolTip("Coldtime");
+  });
+
+  // Minimize to tray on close, instead of actually quitting
+  mainWindow.on("close", (event) => {
+    if (!isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+      event.returnValue = false;
+    }
+  });
+
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url);
+    return { action: "deny" };
+  });
+
+  // HMR for renderer base on electron-vite cli.
+  // Load the remote URL for development or the local html file for production.
+  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
+    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
+  } else {
+    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+  }
 }
 
 // This method will be called when Electron has finished

@@ -1,15 +1,19 @@
 import { Box, Divider, IconButton, Image, Tooltip } from "@chakra-ui/react";
+import deviceListState from "@renderer/state/devices/deviceList";
 import { useTranslation } from "react-i18next";
 import { MdSettings } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import AddDeviceButton from "./Device/AddDeviceButton";
 import DrawerDeviceList from "./Device/DrawerDeviceList";
+import logo from "../../assets/logo.png";
 
 export default function Drawer() {
   const { t } = useTranslation();
+  const devices = useRecoilValue(deviceListState);
 
   return (
-    <div className="h-screen fixed top-0 w-[72px] py-3 pl-1">
+    <div className="h-screen fixed top-0 w-[72px] py-3 pl-1 z-50">
       <Box
         backdropFilter="blur(20px) saturate(150%)"
         borderRadius="xl"
@@ -58,18 +62,27 @@ export default function Drawer() {
         />
         <Link to="/">
           <Image
-            src="/src/assets/logo.png"
+            src={logo}
             alt="Coldtime logo"
             borderRadius="full"
             w={"20"}
+            transition="all 0.3s"
+            _hover={{
+              boxShadow: "0 12px 32px 0 rgba(53, 98, 171, 0.8)",
+            }}
           />
         </Link>
         <span className="text-xs text-gray-200 font-semibold mt-2">
           Coldtime
         </span>
+
         <Divider my={4} />
-        <DrawerDeviceList />
-        <Divider my={4} />
+        {devices && devices.length ? (
+          <>
+            <DrawerDeviceList />
+            <Divider my={4} />
+          </>
+        ) : null}
         <AddDeviceButton />
         <Tooltip label={t("settings.settings")}>
           <IconButton

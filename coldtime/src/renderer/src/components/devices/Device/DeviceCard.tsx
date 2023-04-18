@@ -114,6 +114,7 @@ const DeviceCard = ({
             <Text fontSize="4xl" fontWeight="bold" color="white">
               {temperature}&deg;C
             </Text>
+            {/* TODO: Think whether the information about data timestamp should be shown here (currently) or at the home page  */}
             <Text fontSize="sm" color="white" mt="2">
               {t("device.status.dataFrom", { date: formattedDate })}
             </Text>

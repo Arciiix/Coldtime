@@ -5,11 +5,11 @@ import {
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react";
-import Loading from "./Loading";
+import Loading, { ILoadingProps } from "./Loading";
 
-const LoadingOverlay = ({ isLoading }) => {
+const LoadingOverlay = (props: ILoadingProps) => {
   return (
-    <Modal isOpen={isLoading} onClose={() => null} isCentered size="full">
+    <Modal isOpen={props.isLoading} onClose={() => null} isCentered size="full">
       <ModalOverlay backdropFilter="blur(10px)" />
       <ModalContent
         bg="rgba(5, 102, 230, 0.082)"
@@ -25,7 +25,7 @@ const LoadingOverlay = ({ isLoading }) => {
           transform="translate(-50%, -50%)"
         >
           <Center>
-            <Loading isLoading={isLoading} />
+            <Loading {...props} />
           </Center>
         </ModalBody>
       </ModalContent>

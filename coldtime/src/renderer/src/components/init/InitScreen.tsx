@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import LanguageSelect from "../settings/LanguageSelect";
 import MadeWithHeart from "../UI/MadeWithHeart";
 import TypingTextAnim from "../UI/TypingTextAnim";
+import logo from "../../assets/logo.png";
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const WelcomePage = () => {
         boxShadow="md"
       >
         <Image
-          src="/src/assets/logo.png"
+          src={logo}
           alt="Coldtime logo"
           borderRadius="full"
           w={{ base: "150px", md: "200px" }}
@@ -64,7 +65,7 @@ const WelcomePage = () => {
         handleLanguageClick={handleLanguageClick}
         isLoading={isLoading}
       />
-      <MadeWithHeart />
+      <MadeWithHeart isAbsolute />
     </Flex>
   );
 };

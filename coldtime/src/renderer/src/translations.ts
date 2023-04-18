@@ -1,8 +1,12 @@
 const translations = {
   en: {
     translation: {
-      loading: "Loading...",
-      deviceList: "Device list",
+      loading: "Loading",
+      deviceList: {
+        title: "Device list",
+        noDevices: "No devices found!",
+        add: "What about adding a new one?",
+      },
       error: "Error",
       refresh: "Refresh",
       cancel: "Cancel",
@@ -12,6 +16,7 @@ const translations = {
       drawer: {
         addDevice: "Add device",
       },
+      goToHomepage: "Go to the dashboard",
       device: {
         goToDevice: "Go to device",
         addNewDevice: {
@@ -65,6 +70,7 @@ const translations = {
         errors: {
           gettingData: "Error while getting the data: {{ error }}",
         },
+        fetchingDataPleaseWait: "Fetching the device data. Please wait.",
       },
       goBack: "Go back",
       noDateSet: "No date set",
@@ -121,8 +127,12 @@ const translations = {
   },
   pl: {
     translation: {
-      loading: "Ładowanie...",
-      deviceList: "Lista urządzeń",
+      loading: "Ładowanie",
+      deviceList: {
+        title: "Lista urządzeń",
+        noDevices: "Nie znaleziono żadnych urządzeń!",
+        add: "Dodaj pierwsze urządzenie",
+      },
       error: "Błąd",
       refresh: "Odśwież",
       cancel: "Anuluj",
@@ -132,6 +142,7 @@ const translations = {
       drawer: {
         addDevice: "Dodaj urządzenie",
       },
+      goToHomepage: "Przejdź do strony głównej",
       device: {
         goToDevice: "Zobacz urządzenie",
         addNewDevice: {
@@ -187,6 +198,8 @@ const translations = {
         errors: {
           gettingData: "Błąd podczas pobierania danych: {{ error }}",
         },
+        fetchingDataPleaseWait:
+          "Pobieranie danych z urządzenia. Proszę czekać.",
       },
       noDateSet: "Nie ustawiono daty",
       goBack: "Cofnij",

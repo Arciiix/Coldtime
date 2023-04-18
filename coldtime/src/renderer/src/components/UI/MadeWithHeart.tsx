@@ -1,21 +1,29 @@
 import { Flex, Image, Link, Text } from "@chakra-ui/react";
+import logo from "../../assets/logo.png";
 
-export default function MadeWithHeart() {
+interface IMadeWithHeart {
+  isAbsolute?: boolean;
+}
+
+export default function MadeWithHeart({ isAbsolute }: IMadeWithHeart) {
   return (
     <Flex
-      position="absolute"
-      bottom="5"
-      left="50%"
-      transform="translateX(-50%)"
       alignItems={"center"}
+      justifyContent={"center"}
       gap={2}
+      w={"100%"}
+      marginX="auto"
+      my={2}
+      {...(isAbsolute
+        ? {
+            position: "absolute",
+            bottom: "5",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }
+        : {})}
     >
-      <Image
-        src="/src/assets/logo.png"
-        alt="Coldtime logo"
-        borderRadius="full"
-        h={"10"}
-      />
+      <Image src={logo} alt="Coldtime logo" borderRadius="full" h={"10"} />
       <Text fontSize={24}>
         <b>Coldtime</b> is made with ❤️ by{" "}
         <Link
