@@ -118,6 +118,14 @@ const translations = {
         saveInterval: "Save interval",
         saveIntervalDesc:
           "Frequency of persisting the data in the database (for charts, table etc.)",
+        maxDataPoints: "Max data points",
+        maxDataPointsDesc:
+          "The maximum amount of data points in the chart - for performance reasons",
+
+        errors: {
+          maxDataPoints:
+            "The value should be an integer greater or equal to 100",
+        },
       },
       duration: {
         minutes: "Minutes",
@@ -247,6 +255,13 @@ const translations = {
         saveInterval: "Częstotliwość zapisywania",
         saveIntervalDesc:
           "Częstotliwość zapisywania w bazie danych (dla wykresów, tabel itp.)",
+        maxDataPoints: "Maks. ilość punktów",
+        maxDataPointsDesc:
+          "Maksymalna ilość punktów na wykresie - do celów optymalizacji oraz wydajności",
+        errors: {
+          maxDataPoints:
+            "Wartość powinna być liczbą całkowitą, większą lub równą 100",
+        },
       },
       duration: {
         minutes: "Minuty",

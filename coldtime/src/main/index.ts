@@ -33,9 +33,6 @@ import "./i18n";
 
 export const prisma = new PrismaClient();
 
-// const MAX_DATA_POINTS = 100; // TODO: Should be a setting
-const MAX_DATA_POINTS = 300; // TODO: Should be a setting
-
 let settings: ISettingsDetails;
 let mainWindow: BrowserWindow;
 let tray: Tray;
@@ -221,12 +218,12 @@ async function editDevice(id: string, data: Partial<Device>): Promise<Device> {
 }
 async function deleteDevice(id: string) {
   await prisma.$transaction([
-    prisma.device.delete({ where: { id: id } }),
     prisma.data.deleteMany({
       where: {
         deviceId: id,
       },
     }),
+    prisma.device.delete({ where: { id: id } }),
   ]);
   createContextMenu();
 }
@@ -241,7 +238,7 @@ async function createWindow(): Promise<void> {
     width: 900,
     height: 670,
 
-    minWidth: 500,
+    minWidth: 620,
     show: false,
     autoHideMenuBar: true,
 
@@ -255,7 +252,8 @@ async function createWindow(): Promise<void> {
       sandbox: false,
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: true, // DEV
+      // devTools: true, // DEV
+      devTools: false,
     },
   });
 
@@ -277,6 +275,7 @@ async function createWindow(): Promise<void> {
     const allDevices = await getAllDevices(true);
 
     console.log("added device");
+    await recreateJobs();
     return { newDevice, devices: allDevices };
   });
 
@@ -288,6 +287,7 @@ async function createWindow(): Promise<void> {
     const allDevices = await getAllDevices(true);
 
     console.log(`edited device ${id}`);
+    await recreateJobs();
     return { newDevice, devices: allDevices };
   });
 
@@ -296,6 +296,7 @@ async function createWindow(): Promise<void> {
     const allDevices = await getAllDevices(true);
 
     console.log(`deleted device ${id}`);
+    await recreateJobs();
     return { devices: allDevices };
   });
 
@@ -323,7 +324,6 @@ async function createWindow(): Promise<void> {
     return getDeviceStats(deviceId);
   });
 
-  // TODO DEV
   ipcMain.handle(
     "GET_HISTORICAL_DATA",
     async (
@@ -349,11 +349,11 @@ async function createWindow(): Promise<void> {
 
       // If there is too many data points - it may crush the app and cause a lot of trouble
       let newData: Data[] = [];
-      if (data.length > MAX_DATA_POINTS) {
+      if (data.length > settings.maxDataPoints.value) {
         for (
           let i = 0;
           i < data.length;
-          i += Math.floor(data.length / MAX_DATA_POINTS)
+          i += Math.floor(data.length / settings.maxDataPoints.value)
         ) {
           newData.push(data[i]);
         }
@@ -374,7 +374,7 @@ async function createWindow(): Promise<void> {
               : undefined,
         })),
         numberOfDataPointsStripped: Math.max(
-          (newData || data).length - MAX_DATA_POINTS,
+          (newData || data).length - settings.maxDataPoints.value,
           0
         ),
       };

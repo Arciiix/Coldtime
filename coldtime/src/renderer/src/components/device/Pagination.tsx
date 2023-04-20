@@ -19,6 +19,8 @@ interface IPagination {
   currentPage: number;
   totalPages: number;
   pageSize: number;
+  lowerSize?: boolean;
+
   setCurrentPage: Dispatch<SetStateAction<number>>;
   setPageSize: Dispatch<SetStateAction<number>>;
 }
@@ -27,6 +29,7 @@ export default function Pagination({
   currentPage,
   totalPages,
   pageSize,
+  lowerSize,
   setCurrentPage,
   setPageSize,
 }: IPagination) {
@@ -87,7 +90,14 @@ export default function Pagination({
   };
 
   return (
-    <Flex gap={4} justifyContent="flex-end" alignItems={"center"} m={3} p={3}>
+    <Flex
+      gap={4}
+      justifyContent="flex-end"
+      alignItems={"center"}
+      m={3}
+      p={3}
+      flexDir={lowerSize ? "column" : "row"}
+    >
       <FormControl
         as={Flex}
         justifyContent="center"
@@ -103,32 +113,34 @@ export default function Pagination({
           min={1}
         />
       </FormControl>
-      <IconButton
-        isDisabled={isFirstPage}
-        icon={<HiChevronDoubleLeft />}
-        onClick={handleFirstPage}
-        aria-label={t("pagination.firstPage")}
-      />
-      <IconButton
-        isDisabled={isFirstPage}
-        icon={<HiChevronLeft />}
-        onClick={handlePreviousPage}
-        aria-label={t("pagination.previousPage")}
-      />
+      <Flex gap={4} m={3}>
+        <IconButton
+          isDisabled={isFirstPage}
+          icon={<HiChevronDoubleLeft />}
+          onClick={handleFirstPage}
+          aria-label={t("pagination.firstPage")}
+        />
+        <IconButton
+          isDisabled={isFirstPage}
+          icon={<HiChevronLeft />}
+          onClick={handlePreviousPage}
+          aria-label={t("pagination.previousPage")}
+        />
 
-      {renderPageButtons()}
-      <IconButton
-        isDisabled={isLastPage}
-        icon={<HiChevronRight />}
-        onClick={handleNextPage}
-        aria-label={t("pagination.nextPage")}
-      />
-      <IconButton
-        isDisabled={isLastPage}
-        icon={<HiChevronDoubleRight />}
-        onClick={handleLastPage}
-        aria-label={t("pagination.lastPage")}
-      />
+        {renderPageButtons()}
+        <IconButton
+          isDisabled={isLastPage}
+          icon={<HiChevronRight />}
+          onClick={handleNextPage}
+          aria-label={t("pagination.nextPage")}
+        />
+        <IconButton
+          isDisabled={isLastPage}
+          icon={<HiChevronDoubleRight />}
+          onClick={handleLastPage}
+          aria-label={t("pagination.lastPage")}
+        />
+      </Flex>
     </Flex>
   );
 }

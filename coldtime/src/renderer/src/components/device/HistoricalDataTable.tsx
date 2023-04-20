@@ -22,6 +22,7 @@ export default function HistoryTable({
   historyData,
   handleRefresh,
   isRefreshing,
+  lowerSize,
 }) {
   const { colorMode } = useColorMode();
   const { t } = useTranslation();
@@ -59,6 +60,7 @@ export default function HistoryTable({
         totalPages={totalPages}
         pageSize={pageSize}
         setPageSize={setPageSize}
+        lowerSize={lowerSize}
       />
       <Table
         variant="simple"
@@ -126,6 +128,7 @@ export default function HistoryTable({
         totalPages={totalPages}
         pageSize={pageSize}
         setPageSize={setPageSize}
+        lowerSize={lowerSize}
       />
     </>
   );

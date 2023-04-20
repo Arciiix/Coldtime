@@ -42,7 +42,7 @@ export default function DeviceList(props: IDeviceListProps) {
     () =>
       editedDevice
         ? [
-            // TODO
+            // TODO: Open in new window
             // {
             //   label: t("device.contextMenu.openInNewWindow"),
             //   prefix: <FaExternalLinkAlt />,
@@ -76,7 +76,6 @@ export default function DeviceList(props: IDeviceListProps) {
     if (!props.devices || !props.devices.length) return [];
 
     return props.devices.map((e) => {
-      // return <Device {...e} />;
       return (
         <DeviceCard
           onContextMenu={(ev) => {
@@ -105,7 +104,6 @@ export default function DeviceList(props: IDeviceListProps) {
           placeItems={"center"}
         >
           {...devices}
-          {/* <NewDevice /> */}
         </SimpleGrid>
       ) : (
         <NoDevices />

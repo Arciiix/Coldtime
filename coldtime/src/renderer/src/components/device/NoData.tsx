@@ -18,7 +18,7 @@ export default function NoData() {
       my={4}
       flexShrink={"0"}
     >
-      <AlertIcon boxSize="4 0px" mr={0} />
+      <AlertIcon boxSize={14} mr={0} />
       <AlertDescription maxWidth="sm" h="max-content" flexShrink={"0"}>
         <Text fontSize="2xl" m={3}>
           {t("device.status.noData")}

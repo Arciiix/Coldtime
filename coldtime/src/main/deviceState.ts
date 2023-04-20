@@ -27,6 +27,7 @@ export default async function getLastState(
       date: "desc",
     },
   });
+  console.log(data);
   return data ? convertData(data) : null;
 }
 

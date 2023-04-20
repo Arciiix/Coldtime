@@ -74,9 +74,10 @@ export default function DeviceDetails() {
 
   const [historicalData, setHistoricalData] = useState<IDeviceState[]>([]);
   const historicalDataSorted = useMemo(() => {
-    return historicalData.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    // We have to copy the array - because Array.sort returns the reference for the original array, which is immutable here
+    return [...historicalData].sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
   }, [historicalData]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -134,18 +135,13 @@ export default function DeviceDetails() {
         })
       );
 
-      const { data } = await ipcRenderer.invoke(
-        // const { data, numberOfDataPointsStripped } = await ipcRenderer.invoke(
-        "GET_HISTORICAL_DATA",
-        {
-          id,
-          start: startDate?.toDate(),
-          end: endDate?.toDate(),
-        }
-      );
+      const { data } = await ipcRenderer.invoke("GET_HISTORICAL_DATA", {
+        id,
+        start: startDate?.toDate(),
+        end: endDate?.toDate(),
+      });
       setHistoricalData(data satisfies IDeviceState[]);
       setHistoricalDataRefreshTime(new Date().getTime());
-      // setNumberOfDataPointsStripped(numberOfDataPointsStripped);
       console.log(data);
     }
     setIsRefreshing(false);
@@ -178,10 +174,11 @@ export default function DeviceDetails() {
 
   if (!deviceData || !device) {
     // TODO
-    return <h1>loading</h1>;
+    return <LoadingOverlay isLoading />;
   }
+
   return (
-    <Box h="100vh" overflowY={"auto"} overflowX="auto" w="100%" maxW="100%">
+    <Box h="100vh" overflowY={"auto"} overflowX="hidden" w="100%" maxW="100%">
       <Flex
         direction="column"
         h="full"
@@ -258,7 +255,7 @@ export default function DeviceDetails() {
                   <>
                     <Icon as={MdThermostat} fontSize="5xl" color={"blue.400"} />
                     <Text fontSize="2xl" fontWeight={"semibold"} mt="4">
-                      {currentState.data.temperature}&deg;C
+                      {currentState.data.temperature} &deg;C
                     </Text>
                   </>
                 ) : (
@@ -300,9 +297,6 @@ export default function DeviceDetails() {
             <ChartComponent
               key={historicalDataRefreshTime}
               data={historicalData}
-              // numberOfDataPointsStripped={numberOfDataPointsStripped}
-              // dateFrom={startDate?.toUnix() ?? null}
-              // dateTo={endDate?.toUnix() ?? null}
             />
 
             <Legend />
@@ -344,6 +338,7 @@ export default function DeviceDetails() {
             <Divider />
             <HistoricalDataTable
               historyData={historicalDataSorted}
+              lowerSize={lowerSize}
               handleRefresh={() => handleRefresh(true)}
               isRefreshing={isRefreshing}
             />

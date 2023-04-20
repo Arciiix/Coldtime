@@ -30,12 +30,9 @@ export async function fetchDeviceData(
         timeout: 5000,
       }
     );
-    if (!request.data)
-      return {
-        isConnected: false,
-        date: new Date(),
-        data: undefined,
-      };
+    if (!request.data) {
+      throw new Error("No data");
+    }
     const data: IDataFormat = request.data;
 
     const dataParsed: IDeviceStateRequired = {
@@ -54,14 +51,17 @@ export async function fetchDeviceData(
 
     return dataParsed;
   } catch (err) {
-    // TODO
-    // console.error(err);
-    // throw new Error("Error while getting device data: " + err?.toString());
-    return {
+    // Probably device is off
+    const dataParsed: IDeviceState = {
       isConnected: false,
       date: new Date(),
       data: undefined,
     };
+    if (!dontPersist) {
+      saveData(dataParsed, deviceId);
+    }
+
+    return dataParsed;
   }
 }
 

@@ -1,9 +1,9 @@
 {
   "name": "coldtime",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "A desktop app for persisting values (i.e. temperature) over time got from multiple devices. Created for POL-EKO to manage their SMART PRO fridge data.",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "arciiix.com",
   "homepage": "https://www.electronjs.org",
   "build": {
     "compression": "maximum",
@@ -75,7 +75,6 @@
     "prisma": "^4.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.2.7",
     "typescript": "^4.9.5",
     "vite": "^4.1.4"
   }

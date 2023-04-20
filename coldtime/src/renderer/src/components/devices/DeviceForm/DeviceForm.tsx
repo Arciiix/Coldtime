@@ -62,7 +62,7 @@ export default function DeviceForm({
   console.log(allDevices);
 
   return (
-    <div className="m-2 flex flex-col">
+    <Flex flexDir="column" m={2}>
       {!hideTitle ? (
         !editedDevice ? (
           <>
@@ -159,6 +159,6 @@ export default function DeviceForm({
           </Button>
         </Flex>
       </form>
-    </div>
+    </Flex>
   );
 }

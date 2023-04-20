@@ -6,6 +6,7 @@ export const defaultSettings: ISettings = {
   language: "en",
   checkInterval: 30, // In seconds
   saveInterval: 60,
+  maxDataPoints: 300,
 };
 
 export type Language = "en" | "pl";
@@ -14,6 +15,7 @@ export interface ISettings {
   language: Language;
   checkInterval: number; // In seconds
   saveInterval: number; // In seconds
+  maxDataPoints: number; // Max data points on the chart
 }
 
 export type ISettingsDetails = {

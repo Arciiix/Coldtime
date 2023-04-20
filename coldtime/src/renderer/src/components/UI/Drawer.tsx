@@ -1,4 +1,11 @@
-import { Box, Divider, IconButton, Image, Tooltip } from "@chakra-ui/react";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Image,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react";
 import deviceListState from "@renderer/state/devices/deviceList";
 import { useTranslation } from "react-i18next";
 import { MdSettings } from "react-icons/md";
@@ -13,7 +20,8 @@ export default function Drawer() {
   const devices = useRecoilValue(deviceListState);
 
   return (
-    <div className="h-screen fixed top-0 w-[72px] py-3 pl-1 z-50">
+    // <div className="h-screen fixed top-0 w-[72px] py-3 pl-1 z-50">
+    <Box h="100vh" pos="fixed" top="0" w="72px" py="3" pl="1" zIndex="50">
       <Box
         backdropFilter="blur(20px) saturate(150%)"
         borderRadius="xl"
@@ -72,9 +80,9 @@ export default function Drawer() {
             }}
           />
         </Link>
-        <span className="text-xs text-gray-200 font-semibold mt-2">
+        <Text fontSize="xs" color="gray.200" fontWeight="semibold" mt="2">
           Coldtime
-        </span>
+        </Text>
 
         <Divider my={4} />
         {devices && devices.length ? (
@@ -99,6 +107,6 @@ export default function Drawer() {
           </IconButton>
         </Tooltip>
       </Box>
-    </div>
+    </Box>
   );
 }

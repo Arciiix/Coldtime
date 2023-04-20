@@ -24,27 +24,6 @@ export default function DrawerDeviceList() {
             );
             const isSelected = deviceId !== "" && id === deviceId;
 
-            //   return (
-            //     <Box bg={"#2D3748"} p={1} rounded="xl" textAlign="center" my={2}>
-            //       <Avatar size="xs" name={name} src="#" mb={2} />
-
-            //       <Text fontSize="xs" fontWeight="bold" mb={1}>
-            //         {name}
-            //       </Text>
-
-            //       <Badge
-            //         colorScheme={isOnline ? "green" : "red"}
-            //         variant="subtle"
-            //         fontWeight="bold"
-            //         display="flex"
-            //         alignItems="center"
-            //         justifyContent="center"
-            //       >
-            //         {statusIcon}
-            //       </Badge>
-            //     </Box>
-            //   );
-
             return (
               <Link key={id} to={`/device/${id}`}>
                 <Tooltip label={isOnline ? name : name + " - offline"}>

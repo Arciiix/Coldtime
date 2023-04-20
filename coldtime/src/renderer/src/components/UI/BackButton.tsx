@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from "@chakra-ui/react";
+import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { MdArrowBack } from "react-icons/md";
 
@@ -12,12 +12,12 @@ export default function BackButton() {
   };
 
   return (
-    <div className="m-2">
+    <Box margin={2}>
       <Tooltip title={t("goBack") as string}>
         <IconButton aria-label={t("goBack")} onClick={goBack}>
           <MdArrowBack />
         </IconButton>
       </Tooltip>
-    </div>
+    </Box>
   );
 }

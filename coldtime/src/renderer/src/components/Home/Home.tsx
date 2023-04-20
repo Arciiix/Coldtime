@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import DeviceList from "../devices/DeviceList/DeviceList";
+import LoadingOverlay from "../UI/Loading/LoadingOverlay";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -45,7 +46,7 @@ export default function Home() {
     });
   }, []);
 
-  if (isLoading) return <h1>loading</h1>; /* TODO */
+  if (isLoading) return <LoadingOverlay isLoading={true} />;
   return (
     <Box
       h="100vh"

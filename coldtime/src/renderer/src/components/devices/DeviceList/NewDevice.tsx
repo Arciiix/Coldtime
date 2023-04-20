@@ -11,7 +11,10 @@ export default function NewDevice() {
       to="/device/add"
       variant="outline"
       colorScheme={"blue"}
-      className="h-full w-full flex flex-col"
+      display="flex"
+      flexDir={"column"}
+      h="full"
+      w="full"
     >
       <MdAdd size={32} />
       {t("device.addNewDevice")}

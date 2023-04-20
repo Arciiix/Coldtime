@@ -11,7 +11,7 @@ const theme = extendTheme({ config });
 
 export default theme;
 
-// DEV
+// Override the Chakra UI color mode
 localStorage.setItem("chakra-ui-color-mode", "dark");
 
 export const CHART_GREEN = "#005900";
