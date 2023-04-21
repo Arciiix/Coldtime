@@ -10,27 +10,56 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { usePagination } from "@renderer/hooks/usePagination";
-import { IDeviceState } from "@renderer/types/device";
+import { AIReturnType, IDeviceState } from "@renderer/types/device";
 import { formatDateToTimestamp } from "@renderer/utils/formatDate";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaWifi } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import Pagination from "./Pagination";
 
+interface IHistoryTableProps {
+  // TODO
+  historyData: any;
+  canRefresh: any;
+  handleRefresh: any;
+  isRefreshing: boolean;
+  lowerSize: boolean;
+  aiData?: AIReturnType | null;
+}
+
 export default function HistoryTable({
   historyData,
+  canRefresh,
   handleRefresh,
   isRefreshing,
   lowerSize,
-}) {
+  aiData,
+}: IHistoryTableProps) {
   const { colorMode } = useColorMode();
   const { t } = useTranslation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+
+  const aiDataParsed = useMemo(() => {
+    if (!aiData) return null;
+    return [
+      ...aiData.lastPoints,
+      ...aiData.predictions.map((e) => ({
+        isConnected: true,
+        date: new Date(e.date),
+
+        data: {
+          temperature: e.temperature,
+          isRunning: true,
+        },
+      })),
+    ];
+  }, [aiData]);
+
   const { currentPageData, totalPages } = usePagination<IDeviceState>(
-    historyData,
+    aiDataParsed ?? historyData,
     currentPage,
     pageSize
   );
@@ -41,19 +70,21 @@ export default function HistoryTable({
 
   return (
     <>
-      <Button
-        my={4}
-        onClick={handleRefresh}
-        isLoading={isRefreshing}
-        loadingText={t("loading")}
-        flexShrink={"0"}
-        colorScheme="blue"
-        variant="outline"
-        p={"5"}
-        size="sm"
-      >
-        <MdRefresh /> {t("refresh")}
-      </Button>
+      {canRefresh ? (
+        <Button
+          my={4}
+          onClick={handleRefresh}
+          isLoading={isRefreshing}
+          loadingText={t("loading")}
+          flexShrink={"0"}
+          colorScheme="blue"
+          variant="outline"
+          p={"5"}
+          size="sm"
+        >
+          <MdRefresh /> {t("refresh")}
+        </Button>
+      ) : null}
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}

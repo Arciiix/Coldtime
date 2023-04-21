@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   Grid,
@@ -14,17 +13,12 @@ import {
 import settingsState from "@renderer/state/settings/settings";
 import { IDevice, IDeviceState, IDeviceStats } from "@renderer/types/device";
 import {
-  exportToCSV,
-  exportToExcel,
-  exportToJSON,
-} from "@renderer/utils/exportData";
-import {
   formatDateAgo,
   formatDateToTimestamp,
 } from "@renderer/utils/formatDate";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaFile, FaFileCsv, FaFileExcel, FaWifi } from "react-icons/fa";
+import { FaWifi } from "react-icons/fa";
 
 import {
   MdOutlinePowerSettingsNew,
@@ -37,9 +31,8 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import LoadingOverlay from "../UI/Loading/LoadingOverlay";
 import RangeDatePicker from "../UI/RangeDatePicker";
-import ChartComponent from "./Chart/ChartComponent";
-import Legend from "./Chart/Legend";
-import HistoricalDataTable from "./HistoricalDataTable";
+import AI from "./AI/AI";
+import DataDisplay from "./DataDisplay";
 import NoData from "./NoData";
 
 const { ipcRenderer } = window.require("electron");
@@ -73,12 +66,6 @@ export default function DeviceDetails() {
   const [endDate, setEndDate] = useState<DateObject | null>(null);
 
   const [historicalData, setHistoricalData] = useState<IDeviceState[]>([]);
-  const historicalDataSorted = useMemo(() => {
-    // We have to copy the array - because Array.sort returns the reference for the original array, which is immutable here
-    return [...historicalData].sort((a, b) => {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    });
-  }, [historicalData]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const formattedDate =
@@ -294,53 +281,25 @@ export default function DeviceDetails() {
 
         {historicalData.length ? (
           <>
-            <ChartComponent
-              key={historicalDataRefreshTime}
-              data={historicalData}
-            />
+            {historicalData.filter((e) => e.data).length > 5 ? (
+              <>
+                <AI
+                  deviceId={id!}
+                  lowerSize={lowerSize ?? false}
+                  deviceData={deviceData}
+                />
+                <Divider marginBottom={3} />
+              </>
+            ) : null}
 
-            <Legend />
-            <Divider />
-            <Flex
-              justifyContent="center"
-              flexDir={lowerSize ? "column" : "row"}
-              gap={2}
-              my={3}
-              p={2}
-            >
-              <Button
-                colorScheme="green"
-                variant="outline"
-                leftIcon={<FaFileExcel />}
-                onClick={() => exportToExcel(deviceData, historicalDataSorted)}
-                mr={2}
-              >
-                {t("export.excel")}
-              </Button>
-              <Button
-                colorScheme="orange"
-                variant="outline"
-                leftIcon={<FaFileCsv />}
-                onClick={() => exportToCSV(deviceData, historicalDataSorted)}
-                mr={2}
-              >
-                {t("export.csv")}
-              </Button>
-              <Button
-                colorScheme="blue"
-                variant="outline"
-                leftIcon={<FaFile />}
-                onClick={() => exportToJSON(deviceData, historicalDataSorted)}
-              >
-                {t("export.json")}
-              </Button>
-            </Flex>
-            <Divider />
-            <HistoricalDataTable
-              historyData={historicalDataSorted}
+            <DataDisplay
+              historicalDataRefreshTime={historicalDataRefreshTime}
+              historicalData={historicalData}
               lowerSize={lowerSize}
-              handleRefresh={() => handleRefresh(true)}
+              deviceData={deviceData}
+              handleRefresh={handleRefresh}
               isRefreshing={isRefreshing}
+              canRefresh
             />
           </>
         ) : (

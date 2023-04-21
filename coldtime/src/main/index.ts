@@ -18,7 +18,11 @@ import { Data, Device, PrismaClient } from "@prisma/client";
 import fs from "fs";
 import { IDevice } from "./device";
 import { fetchDeviceData, fetchDeviceDataByIpOnly } from "./deviceAdapter";
-import getLastState, { getDeviceStats, IDeviceState } from "./deviceState";
+import getLastState, {
+  convertData,
+  getDeviceStats,
+  IDeviceState,
+} from "./deviceState";
 import discoverNetwork from "./networkDiscovery";
 import {
   getSettings,
@@ -30,6 +34,7 @@ import {
 // Init translations
 import i18next from "i18next";
 import "./i18n";
+import { predictNewData } from "./ai";
 
 export const prisma = new PrismaClient();
 
@@ -412,6 +417,31 @@ async function createWindow(): Promise<void> {
       });
     }
   });
+
+  ipcMain.handle(
+    "PREDICT_DATA",
+    async (_, deviceId, epochs, pointsToGenerate) => {
+      const lastPoints = await prisma.data.findMany({
+        where: {
+          deviceId,
+        },
+        orderBy: {
+          date: "desc",
+        },
+        take: 5,
+      });
+
+      const predictions = await predictNewData(
+        deviceId,
+        epochs,
+        pointsToGenerate
+      );
+      return {
+        predictions,
+        lastPoints: lastPoints.map((e) => convertData(e)),
+      };
+    }
+  );
 
   initJobs();
   const allDevices = await getAllDevices();

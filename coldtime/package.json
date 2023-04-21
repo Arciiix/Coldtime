@@ -1,6 +1,6 @@
 {
   "name": "coldtime",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "description": "A desktop app for persisting values (i.e. temperature) over time got from multiple devices. Created for POL-EKO to manage their SMART PRO fridge data.",
   "main": "./out/main/index.js",
   "author": "arciiix.com",
@@ -38,6 +38,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@prisma/client": "^4.11.0",
+    "@tensorflow/tfjs": "^4.4.0",
     "apexcharts": "^3.37.3",
     "axios": "^1.3.4",
     "framer-motion": "^10.9.1",

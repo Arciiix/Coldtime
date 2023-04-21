@@ -71,6 +71,18 @@ const translations = {
           gettingData: "Error while getting the data: {{ error }}",
         },
         fetchingDataPleaseWait: "Fetching the device data. Please wait.",
+        ai: {
+          predict: "Predict new data (AI)",
+          experimental: "BETA",
+          epochs: "Number of epochs during model training",
+          epochsError: "Epochs must be a natural number",
+          train: "Train",
+          startOfAi: "Start of predicted data",
+          pointsToGenerate: "Number of points to generate",
+          pointsToGenerateError:
+            "Points to generate should be a natural number",
+          predicting: "The neural network is thinking...",
+        },
       },
       goBack: "Go back",
       noDateSet: "No date set",
@@ -208,6 +220,18 @@ const translations = {
         },
         fetchingDataPleaseWait:
           "Pobieranie danych z urządzenia. Proszę czekać.",
+        ai: {
+          predict: "Przewiduj nowe dane (AI)",
+          experimental: "Eksperymentalne",
+          epochs: "Ilość powtórzeń podczas trenowania modelu",
+          epochsError: "Ilość powtórzeń musi być liczbą naturalną",
+          train: "Trenuj",
+          startOfAi: "Początek przewidywanych danych",
+          pointsToGenerate: "Ilość punktów do wygenerowania",
+          pointsToGenerateError:
+            "Punkty do wygenerowania powinny być liczbą naturalną",
+          predicting: "Sieć neuronowa myśli...",
+        },
       },
       noDateSet: "Nie ustawiono daty",
       goBack: "Cofnij",

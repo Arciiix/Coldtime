@@ -12,6 +12,12 @@ export interface IDeviceState {
     isRunning: boolean;
   };
 }
+
+export interface IDeviceStateRaw {
+  date: Date;
+  temperature: number;
+}
+
 export type IDeviceStateRequired = {
   [P in keyof IDeviceState]-?: IDeviceState[P];
 };

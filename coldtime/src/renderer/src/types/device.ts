@@ -25,3 +25,12 @@ export interface IDeviceStats {
 
   currentState: IDeviceState;
 }
+export interface IDeviceStateRaw {
+  date: Date;
+  temperature: number;
+}
+
+export type AIReturnType = {
+  predictions: IDeviceStateRaw[];
+  lastPoints: IDeviceState[];
+};
