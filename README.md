@@ -9,6 +9,8 @@ A desktop app for persisting values (i.e. temperature) over time got from multip
 
 ---
 
+**UPDATE**: My app has won the contest 🤗
+
 ## Showcase
 
 ![Home page](./resources/en-device-list.png "Home page")
